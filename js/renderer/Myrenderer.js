@@ -1,4 +1,11 @@
 export class Myrenderer {
+    /**
+     * vertexshaderとfragmentshaderを
+     * @param gl
+     * @param vsSource
+     * @param fsSource
+     * @returns {null|WebGLProgram}
+     */
     static initShaderProgram(gl, vsSource, fsSource) {
         const vertexShader = this.loadShader(gl, gl.VERTEX_SHADER, vsSource);
         const fragmentShader = this.loadShader(gl, gl.FRAGMENT_SHADER, fsSource);

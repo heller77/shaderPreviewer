@@ -17,3 +17,8 @@ canvas {
     padding: 10px;
     margin-left: auto;
 }
+
+#updateShaderButton {
+    margin-right: auto;
+    padding: 30px;
+}
