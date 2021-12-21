@@ -23,7 +23,6 @@ export class Myrenderer {
         if (!gl.getShaderParameter(shaderObj, gl.COMPILE_STATUS)) {
             alert(shaderObj.type + "shader error:" + gl.getShaderInfoLog(shaderObj));
             // alert("シェーダのコンパイルに失敗しました");
-
             gl.deleteShader(shaderObj);
             return null;
         }
@@ -44,14 +43,12 @@ export class Myrenderer {
         });
         //頂点位置
         // const positions = [
-        //     1.0 , 1.0,
+        //    1.0 , 1.0,
         //     -1.0, 1.0,
         //     1.0, -1.0,
         //     -1.0, -1.0,
         // ];
-        const positions = Input_positionArray;
-
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(Input_positionArray), gl.STATIC_DRAW);
         const uvBuffer = gl.createBuffer();
         console.log(Input_uvArray);
         gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
@@ -67,7 +64,7 @@ export class Myrenderer {
         };
     }
 
-    static drawScene(gl, programInfo, buffers) {
+    static drawScene(gl, programInfo, buffers, elapsedtime) {
         gl.clearColor(0., 0., 0., 1);
         gl.clearDepth(1.0);
         gl.enable(gl.DEPTH_TEST);
@@ -85,11 +82,9 @@ export class Myrenderer {
 
         const modelViewMatrix = mat4.create();
         mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -2.414]);
-
-        const resolution = [gl.width, gl.height];
         //vertexshaderの頂点情報（aVertexPosition）
         {
-            const numComponet = 2;
+            const numComponet = 3;
             const type = gl.FLOAT;
             const normalize = false;
             const stride = 0;
@@ -127,8 +122,12 @@ export class Myrenderer {
             programInfo.uniformLocations.modelViewMatrix,
             false,
             modelViewMatrix);
-        console.log("width : " + gl.width);
+        // console.log("受け取った　elapsetime" + elapsedtime);
+        //timeを送信
+        gl.uniform1f(programInfo.uniformLocations.time, elapsedtime);
+
         gl.uniform2f(programInfo.uniformLocations.Resolution, gl.canvas.clientWidth, gl.canvas.clientHeight);
+
         {
             const offset = 0;
             const vertexCount = 4;
