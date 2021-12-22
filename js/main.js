@@ -44,13 +44,16 @@ function main() {
       varying vec2 texcoord1;
       uniform vec2 resolution;
       uniform float time;
+      float testmethod(){
+      return sin(3.*time);
+      }
       void main() {
         vec2 r=resolution;
         vec2 p =(gl_FragCoord.xy*2.-r)/min(r.x,r.y);
         float t =time;
         float c=length(sin(p.x+t*2.+0.5*fract(sin(dot(p.xy,vec2(12.9898,78.233)))*43758.5453123))+p.y+cos(t)*2.);
-        gl_FragColor = vec4(c+p.x,c+p.y,c,1.0);
-        // gl_FragColor = vec4(sin(time));
+        // gl_FragColor = vec4(c+p.x,c+p.y,c,1.0);
+        gl_FragColor = vec4(testmethod());
       }
     `;
     // const fsSource = "precision mediump float;\n" +
@@ -98,7 +101,7 @@ function main() {
     inputFragment.innerHTML = fsSource;
     const shaderProgram = Myrenderer.initShaderProgram(gl, vsSource, fsSource);
 
-    const shaderInfo = {
+    let shaderInfo = {
         program: shaderProgram,
         attribLocations: {
             vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
@@ -111,6 +114,7 @@ function main() {
             time: gl.getUniformLocation(shaderProgram, "time"),
         },
     };
+    console.log(shaderInfo);
     let width = canvas.clientWidth;
     let height = canvas.clientHeight;
     let aspect = width / height;

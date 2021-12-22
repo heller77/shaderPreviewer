@@ -24,6 +24,22 @@ export class GameObject {
     updateFsshader(fsSource) {
         console.log("shaderinfo" + this.shaderinfo);
         console.log("program" + this.shaderinfo.program);
-        this.shaderinfo.program = Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
+        let shaderProgram= Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
+
+       this.shaderinfo = {
+            program: shaderProgram,
+            attribLocations: {
+                vertexPosition: this.gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+                uv: this.gl.getAttribLocation(shaderProgram, "uv"),
+            },
+            uniformLocations: {
+                projectionMatrix: this.gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
+                modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+                Resolution: this.gl.getUniformLocation(shaderProgram, "resolution"),
+                time: this.gl.getUniformLocation(shaderProgram, "time"),
+            },
+        };
+        console.log("更新後のshaderprogram");
+        console.log(this.shaderinfo);
     }
 }
