@@ -1,5 +1,6 @@
 body {
     background-color: dimgrey;
+    padding: 0px;
 }
 
 p {
@@ -21,4 +22,9 @@ canvas {
 #updateShaderButton {
     margin-right: auto;
     padding: 30px;
+}
+
+#shaderInput {
+    margin: 0;
+    width: 100%;
 }

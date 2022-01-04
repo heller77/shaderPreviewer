@@ -1,7 +1,7 @@
 import {Myrenderer} from "./renderer/Myrenderer.js";
 
 export class GameObject {
-    constructor(gl, vsSource, fsSource, shaderinfo, buffer) {
+    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform) {
         this.gl = gl;
         this.vsSource = vsSource;
         this.fsSource = fsSource;
@@ -9,6 +9,8 @@ export class GameObject {
         this.buffer = buffer;
         //elapsedtimeは経過時間
         this.elapsedTime = 0.0;
+        this.geometorydata = geometorydata;
+        this.transform = transform;
     }
 
     update(deltatime) {
@@ -18,15 +20,16 @@ export class GameObject {
     draw(deltatime) {
         this.elapsedTime += deltatime;
         // console.log("elapse time is " + this.elapsedTime);
-        Myrenderer.drawScene(this.gl, this.shaderinfo, this.buffer, this.elapsedTime);
+        Myrenderer.drawElements(this.gl, this.shaderinfo,
+            this.buffer, this.elapsedTime, this.geometorydata, this.transform);
     }
 
     updateFsshader(fsSource) {
         console.log("shaderinfo" + this.shaderinfo);
         console.log("program" + this.shaderinfo.program);
-        let shaderProgram= Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
+        let shaderProgram = Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
 
-       this.shaderinfo = {
+        this.shaderinfo = {
             program: shaderProgram,
             attribLocations: {
                 vertexPosition: this.gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
@@ -41,5 +44,11 @@ export class GameObject {
         };
         console.log("更新後のshaderprogram");
         console.log(this.shaderinfo);
+    }
+}
+
+export class Transfrom {
+    constructor(position) {
+        this.position = position;
     }
 }
