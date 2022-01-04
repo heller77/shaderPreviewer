@@ -83,7 +83,8 @@ export class Myrenderer {
             -1, 0, 0,//左上
             0, -1, 0//右上
         ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(geometorydata.positionData), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER,
+            new Float32Array(geometorydata.positionData), gl.STATIC_DRAW);
         // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionTest), gl.STATIC_DRAW);
 
         // const uvBuffer = gl.createBuffer();
@@ -145,8 +146,8 @@ export class Myrenderer {
         const modelViewMatrix = mat4.create();
         // mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -2.414]);
         mat4.translate(modelViewMatrix, modelViewMatrix, tramsform.position);
-        let rad = 90 * Math.PI / 180;
-        // mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 0, 0]);
+        // let rad = elapsedtime * Math.PI / 180;
+        // mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 1, 1]);
         //vertexshaderの頂点情報（aVertexPosition）
         {
             const numComponents = 3;
@@ -226,8 +227,8 @@ export class Myrenderer {
         const modelViewMatrix = mat4.create();
         // mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -2.414]);
         mat4.translate(modelViewMatrix, modelViewMatrix, tramsform.position);
-        let rad = 90 * Math.PI / 180;
-        mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 0, 0]);
+        let rad = elapsedtime * 30 * Math.PI / 180;
+        mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 1, 1]);
         //vertexshaderの頂点情報（aVertexPosition）
         {
             const numComponents = 3;
@@ -245,17 +246,7 @@ export class Myrenderer {
             gl.enableVertexAttribArray(
                 programInfo.attribLocations.vertexPosition);
         }
-        // {
-        //     const numComponent = 2;
-        //     const type = gl.FLOAT;
-        //     const noramlize = false;
-        //     const stride = 0;
-        //     const offset = 0;
-        //     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.uv);
-        //     gl.vertexAttribPointer(programInfo.attribLocations.uv,
-        //         numComponent, type, noramlize, stride, offset);
-        //     gl.enableVertexAttribArray(programInfo.attribLocations.uv);
-        // }
+
 
         //どのシェーダ使うかの指定
         gl.useProgram(programInfo.program);
@@ -274,7 +265,7 @@ export class Myrenderer {
 
         gl.uniform2f(programInfo.uniformLocations.Resolution, gl.canvas.clientWidth, gl.canvas.clientHeight);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.index);
+
         {
             const offset = 0;
             const vertexCount = geometoryData.vertexCount;
