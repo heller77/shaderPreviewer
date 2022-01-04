@@ -14,11 +14,12 @@ export class GameObject {
     }
 
     update(deltatime) {
-        this.draw(deltatime);
+        this.elapsedTime += deltatime;
+        this.draw();
     }
 
-    draw(deltatime) {
-        this.elapsedTime += deltatime;
+    draw() {
+
         // console.log("elapse time is " + this.elapsedTime);
         Myrenderer.drawElements(this.gl, this.shaderinfo,
             this.buffer, this.elapsedTime, this.geometorydata, this.transform);
