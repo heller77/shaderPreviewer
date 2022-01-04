@@ -2,7 +2,8 @@ import {Myrenderer} from "./renderer/Myrenderer.js";
 import {GameObject, Transfrom} from "./GameObject.js";
 
 window.addEventListener("load", main);
-
+//
+let canvasIdList = [];
 let gameobjectList = [];
 let preFrameTime = 0;
 
@@ -10,8 +11,11 @@ function createCanvas(count) {
     let parent = document.getElementById("canvasParent");
     for (let i = 0; i < count; i++) {
         console.log(i + " canvas 作成");
+
         let tmp = document.createElement("canvas");
-        tmp.id = "canvas" + i;
+        let canvasidName = "canvas" + i;
+        tmp.id = canvasidName;
+        canvasIdList.push(canvasidName);
         parent.appendChild(tmp);
     }
 }
@@ -129,15 +133,16 @@ void main(void){
 
 async function main() {
     //canvasの個数
-    let count = 2;
+    let count = 4;
     await createCanvas(count);
     document.getElementById("updateShaderButton").onclick = updateShader;
+    //canvasそれぞれに描画するオブジェクトを生成
+    for (const canvasidName of canvasIdList) {
+        let tempGameObject = await createGameObject(canvasidName);
 
-    for (let i = 0; i < count; i++) {
-        console.log(i);
-        let tempGameObject = await createGameObject("canvas" + i);
         gameobjectList.push(tempGameObject);
     }
+
     preFrameTime = Date.now();
     loop();
 }
