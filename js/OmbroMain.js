@@ -10,7 +10,7 @@ let preFrameTime = 0;
 function createCanvas(count) {
     let parent = document.getElementById("canvasParent");
     for (let i = 0; i < count; i++) {
-        console.log(i + " canvas 作成");
+        // console.log(i + " canvas 作成");
 
         let tmp = document.createElement("canvas");
         let canvasidName = "canvas" + i;
@@ -20,8 +20,8 @@ function createCanvas(count) {
     }
 }
 
-async function createGameObject(canvasid) {
-    const canvas = document.getElementById(canvasid);
+function createGameObject(canvas) {
+
     const gl = canvas.getContext("webgl");
     if (gl == null) {
         alert("webglが初期が出来ない!\n" +
@@ -105,12 +105,7 @@ void main(void){
         -1.0 * aspect, 1.0, 0,
         1.0 * aspect, 1.0, 0,
     ];
-    const uv = [
-        1 * width, 1 * height,
-        0, 1 * height,
-        1 * width, 0,
-        0, 0
-    ];
+
 
     const elementData = [0, 1, 3, 0, 3, 2];
     const elementCount = 6;
@@ -123,7 +118,7 @@ void main(void){
         //indexの個数
         elmentCount: elementCount,
     };
-    const buffers = await Myrenderer.initBuffers(gl, geometorydata);
+    const buffers = Myrenderer.initBuffers(gl, geometorydata);
     let gameobject
         = new GameObject(gl, vsSource,
         fsSource, shaderInfo, buffers, geometorydata,
@@ -133,12 +128,14 @@ void main(void){
 
 async function main() {
     //canvasの個数
-    let count = 4;
+    let count = 0;
     await createCanvas(count);
     document.getElementById("updateShaderButton").onclick = updateShader;
+    let canvaslist = document.getElementsByTagName("canvas");
     //canvasそれぞれに描画するオブジェクトを生成
-    for (const canvasidName of canvasIdList) {
-        let tempGameObject = await createGameObject(canvasidName);
+    for (const canvas of canvaslist) {
+        console.log(canvas);
+        let tempGameObject = await createGameObject(canvas);
 
         gameobjectList.push(tempGameObject);
     }
@@ -162,8 +159,8 @@ function loop() {
 
 function updateShader() {
     let newfsSource = document.getElementById("shaderInput").value;
-    console.log("update shader!");
-    console.log(newfsSource);
+    // console.log("update shader!");
+    // console.log(newfsSource);
     gameobjectList.forEach((item) => {
         item.updateFsshader(newfsSource);
     });
