@@ -14,6 +14,33 @@ class Component {
  * 以下のコードを、使いたいhtmlに追加してください
  * <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.6.1/gl-matrix-min.js"></script>
  */
+class Scene {
+    constructor() {
+        console.log("scene 生成");
+        this.gameobjectList = [];
+    }
+    setCamera(cameraGameobject) {
+        this.cameraGameobject = cameraGameobject;
+    }
+    getCamera() {
+        return this.cameraGameobject;
+    }
+    addGameObject(gameobject) {
+        this.gameobjectList.push(gameobject);
+    }
+    removeAllGameObject() {
+        console.log("削除前のgameobjectlist size : " + this.gameobjectList.length);
+        this.gameobjectList.splice(0);
+        console.log("削除後のgameobjectlist size : " + this.gameobjectList.length);
+    }
+    getGameobjectList() {
+        return this.gameobjectList;
+    }
+    getGameobjectCount() {
+        return this.gameobjectList.length;
+    }
+}
+let firstScene = new Scene();
 
 let gameobjectList = [];
 let preFrameTime = 0.0;
