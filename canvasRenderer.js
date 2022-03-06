@@ -31,23 +31,29 @@ class Scene {
         console.log("scene 生成");
         this.gameobjectList = [];
     }
+
     setCamera(cameraGameobject) {
         this.cameraGameobject = cameraGameobject;
     }
+
     getCamera() {
         return this.cameraGameobject;
     }
+
     addGameObject(gameobject) {
         this.gameobjectList.push(gameobject);
     }
+
     removeAllGameObject() {
         console.log("削除前のgameobjectlist size : " + this.gameobjectList.length);
         this.gameobjectList.splice(0);
         console.log("削除後のgameobjectlist size : " + this.gameobjectList.length);
     }
+
     getGameobjectList() {
         return this.gameobjectList;
     }
+
     getGameobjectCount() {
         return this.gameobjectList.length;
     }
@@ -258,17 +264,6 @@ class Myrenderer {
      * @param gameObjectTramsform
      */
     static drawElements(gl, programInfo, buffers, elapsedtime, geometoryData, gameObjectTramsform) {
-
-        gl.clearColor(0., 0., 0., 1);
-        gl.clearDepth(1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.depthFunc(gl.LEQUAL);
-        gl.enable(gl.DEPTH_TEST);
-        gl.enable(gl.CULL_FACE);
-
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.ONE, gl.ONE);
-
         const fieldOfView = 45 * Math.PI / 180;   // in radians
         const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
         const zNear = 0.1;
@@ -331,7 +326,7 @@ class Myrenderer {
  * メッシュの情報やシェーダの情報を保持する
  */
 class GameObject {
-    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform,) {
+    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform) {
         this.gl = gl;
         this.vsSource = vsSource;
         this.fsSource = fsSource;
