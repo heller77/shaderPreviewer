@@ -20,7 +20,9 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
     let canvaslist = document.getElementsByClassName(canvasClassName);
 
     for (const canvas of canvaslist) {
-        let tempGameObject = createGameObject(canvas, shader, geometoryData);
+        let tempGameObject = createGameObject(canvas, shader, geometoryData, () => {
+            console.log("gameobject update");
+        });
         gameobjectList.push(tempGameObject);
     }
     preFrameTime = Date.now();
@@ -46,7 +48,8 @@ function loop() {
  * @param inputShader
  * @returns {GameObject}
  */
-function createGameObject(canvas, inputShader, geometoryData) {
+function createGameObject(canvas, inputShader, geometoryData, updateMethod = () => {
+}) {
 
     const gl = canvas.getContext("webgl");
     if (gl == null) {
@@ -85,8 +88,7 @@ function createGameObject(canvas, inputShader, geometoryData) {
     const buffers = Myrenderer.initBuffers(gl, geometoryData);
     return new GameObject(gl, vsSource,
         fsSource, shaderInfo, buffers, geometoryData,
-        new Transfrom([-0, 0, -3.2]), () => {
-        });
+        new Transfrom([-0, 0, -3.2]), updateMethod);
 }
 
 /**
@@ -249,6 +251,7 @@ class Myrenderer {
  */
 class GameObject {
     constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform, updateMethod = () => {
+        console.log("default method");
     }) {
         this.gl = gl;
         this.vsSource = vsSource;
