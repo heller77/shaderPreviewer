@@ -14,6 +14,7 @@ let preFrameTime = 0.0;
  * この関数はglmatrix.jsが必要です
  * @param canvasClassName canvasのclass名を文字列で指定
  * @param shader シェーダコードを文字列で指定
+ * @param geometoryData メッシュのデータ
  */
 function AllCanvasRendering(canvasClassName, shader, geometoryData) {
     //canvasをすべて取得
@@ -47,6 +48,8 @@ function loop() {
  * @param canvas　
  * @param inputShader
  * @returns {GameObject}
+ * @param geometoryData
+ * @param updateMethod
  */
 function createGameObject(canvas, inputShader, geometoryData, updateMethod = () => {
 }) {
