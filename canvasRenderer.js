@@ -367,6 +367,10 @@ class GameObject {
      * @param fsSource
      */
     updateFsshader(fsSource) {
+        if (this.fsSource == undefined) {
+            console.log("fssource is undifine");
+            return;
+        }
         let shaderProgram = Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
 
         this.shaderinfo = {
