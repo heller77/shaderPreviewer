@@ -8,6 +8,18 @@ class Component {
     }
 }
 
+class FirstDrawSettingComponent extends Component {
+    update() {
+        Myrenderer.initDraw(this.gameobject.gl);
+    }
+}
+
+class MeshRenderComponent extends Component {
+    update() {
+        this.gameobject.draw();
+    }
+}
+
 /**
  * このjavascriptをインポートしてAllCanvawsRendering関数を呼べば、html上のcanvasに指定のshaderで描画できます
  * ただし、このスクリプトを使用するには、glmatrix.jsが必要です。
@@ -42,8 +54,22 @@ class Scene {
 }
 let firstScene = new Scene();
 
-let gameobjectList = [];
 let preFrameTime = 0.0;
+
+function init(canvasClassName) {
+    let canvaslist = document.getElementsByClassName(canvasClassName);
+    for (const canvas of canvaslist) {
+        //描画の初期化を行うためのオブジェクト
+        let firstDrawSettingGamebject = new GameObject(canvas.getContext("webgl"), undefined, undefined, undefined, undefined, undefined, undefined);
+        const firstdrassettingComponent = new FirstDrawSettingComponent(firstDrawSettingGamebject);
+        firstDrawSettingGamebject.addComponent(firstdrassettingComponent);
+        firstScene.addGameObject(firstDrawSettingGamebject);
+
+        //カメラオブジェクト
+        let cameraGameobject = new GameObject(canvas.getContext("webgl"),
+            undefined, undefined, undefined, undefined, undefined, new Transfrom());
+    }
+}
 
 /**
  *この関数を呼ぶと、html上にあるcanvasClassNameのcanvasが
@@ -58,10 +84,11 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
     let canvaslist = document.getElementsByClassName(canvasClassName);
 
     for (const canvas of canvaslist) {
-
         let tempGameObject = createGameObject(canvas, shader, geometoryData,);
         let component = new Component(tempGameObject);
         tempGameObject.addComponent(component);
+        let meshrenderComponent = new MeshRenderComponent(tempGameObject);
+        tempGameObject.addComponent(meshrenderComponent);
 
         firstScene.addGameObject(tempGameObject);
     }
@@ -209,6 +236,18 @@ class Myrenderer {
         };
     }
 
+    static initDraw(gl) {
+        gl.clearColor(0., 0., 0., 1);
+        gl.clearDepth(1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.depthFunc(gl.LEQUAL);
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.CULL_FACE);
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE);
+    }
+
     /**
      * indexを用いた描画
      * @param gl
@@ -318,7 +357,6 @@ class GameObject {
             component.update();
         }
         this.elapsedTime += deltatime;
-        this.draw();
     }
 
     /**
