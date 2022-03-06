@@ -63,7 +63,7 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
         let component = new Component(tempGameObject);
         tempGameObject.addComponent(component);
 
-        gameobjectList.push(tempGameObject);
+        firstScene.addGameObject(tempGameObject);
     }
     preFrameTime = Date.now();
     loop();
@@ -74,7 +74,9 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
  */
 function loop() {
     const deltatime = 0.001 * (Date.now() - preFrameTime);
-    gameobjectList.forEach((item) => {
+    console.log("gameobject size : " + firstScene.getGameobjectCount());
+
+    firstScene.getGameobjectList().forEach((item) => {
         item.update(deltatime);
     });
     preFrameTime = Date.now();
