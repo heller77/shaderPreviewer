@@ -46,11 +46,14 @@ void main(void){
     `;
 
 async function previewMainLoop() {
-    const geometry = await getGeometory("./../../model/monkey.glb");
-    reset(fsSource, geometry);
+    const geometry = await getGeometory("./../../model/torus.gltf");
+    init("modelPreviewCanvas");
+    AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
 }
 
 function reset(fsSource, geometry) {
+    firstScene.removeAllGameObject();
+    init("modelPreviewCanvas");
     AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
 }
 
