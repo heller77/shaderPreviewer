@@ -46,17 +46,6 @@ void main(void){
     `;
 
 async function previewMainLoop() {
-
-    // const canvas = document.getElementsByClassName("modelPreviewCanvas");
-    let width = 640;
-    let height = 480;
-    let aspect = width / height;
-    // const positions = [
-    //     -1.0 * aspect, -1.0, 0,
-    //     aspect, -1.0, 0,
-    //     -1.0 * aspect, 1.0, 0,
-    //     aspect, 1.0, 0,
-    // ];
     const geometry = await getGeometory("./../../model/monkey.glb");
     reset(fsSource, geometry);
 }
