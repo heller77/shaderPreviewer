@@ -48,7 +48,7 @@ void main(void){
 async function previewMainLoop() {
     document.getElementById("shaderInput").value = fsSource;
     document.getElementById("updateShaderButton").onclick = updateShader;
-    const geometry = await getGeometory("./../../model/torus.gltf");
+    const geometry = await getGeometory("./../../model/onlyGlb.glb");
     init("modelPreviewCanvas");
     AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
 }
@@ -60,13 +60,20 @@ function reset(fsSource, geometry) {
 }
 
 async function modelChange(evt) {
-    console.log("file change");
+    console.log("\n file change");
     let input = evt.target;
     const reader = new FileReader();
     const file = input.files[0];
-    reader.readAsText(file);
-
-
+    const filename = file.name;
+    const position = filename.lastIndexOf(".");
+    const extension = filename.slice(position + 1);
+    console.log("拡張し；　" + extension);
+    // if (extension === "gltf") {
+    //     reader.readAsText(file);
+    // } else if (extension === "glb") {
+    //     reader.readAsBinaryString(file);
+    // }
+    reader.readAsArrayBuffer(file);
     const fileString = await fileRead(reader);
     const geometry = await getGeometoryByArray(fileString);
     reset(fsSource, geometry);
@@ -75,6 +82,7 @@ async function modelChange(evt) {
 async function fileRead(reader) {
     return new Promise((resolve => {
         reader.onload = function () {
+            console.log("reader result :" + reader.result);
             resolve(reader.result);
         };
     }));

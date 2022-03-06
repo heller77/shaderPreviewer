@@ -3,20 +3,64 @@ class Component {
         this.gameobject = gameobject;
     }
 
-    update() {
+    update(deltatime) {
         // console.log(this.gameobject.transform.position);
     }
 }
 
 class FirstDrawSettingComponent extends Component {
-    update() {
+    update(deltatime) {
         Myrenderer.initDraw(this.gameobject.gl);
     }
 }
 
 class MeshRenderComponent extends Component {
-    update() {
+    update(deltatime) {
         this.gameobject.draw();
+    }
+}
+
+class CameraComponent extends Component {
+    constructor(gameobject) {
+        super(gameobject);
+        this.up = [0, 1, 0];
+        this.lookat = [0, 0, 0];
+        this.radius = 2;
+    }
+
+    getUp() {
+        return this.up;
+    }
+
+    getLookat() {
+        return this.lookat;
+    }
+
+    getPosition() {
+        return this.gameobject.transform.position;
+    }
+
+    getRotation() {
+        return this.gameobject.transform.rotation;
+    }
+
+    update(deltatime) {
+        console.log(Input.cameraRotate()[0]);
+        const xRad = Input.cameraRotate()[0];
+        let x = Math.cos(xRad) * this.radius;
+        console.log("x : " + x);
+        let y = Math.sin(xRad) * this.radius;
+        this.gameobject.transform.position[0] = x;
+        this.gameobject.transform.position[2] = y;
+    }
+}
+
+class RotateComponent extends Component {
+    update(deltatime) {
+        // console.log(this.gameobject.transform.rotation);
+        let rotate = this.gameobject.transform.rotation;
+        rotate = Input.cameraRotate();
+        this.gameobject.transform.rotation = rotate;
     }
 }
 
@@ -58,6 +102,15 @@ class Scene {
         return this.gameobjectList.length;
     }
 }
+
+class Input {
+    static cameraRotate() {
+        let rotatex = document.getElementById("rotateX").value;
+        // console.log(rotatex);
+        return [rotatex, 0, 0];
+    }
+}
+
 let firstScene = new Scene();
 
 let preFrameTime = 0.0;
@@ -66,14 +119,21 @@ function init(canvasClassName) {
     let canvaslist = document.getElementsByClassName(canvasClassName);
     for (const canvas of canvaslist) {
         //描画の初期化を行うためのオブジェクト
-        let firstDrawSettingGamebject = new GameObject(canvas.getContext("webgl"), undefined, undefined, undefined, undefined, undefined, undefined);
+        let firstDrawSettingGamebject = new GameObject(canvas.getContext("webgl"), undefined,
+            undefined, undefined, undefined,
+            undefined, undefined, firstScene);
         const firstdrassettingComponent = new FirstDrawSettingComponent(firstDrawSettingGamebject);
         firstDrawSettingGamebject.addComponent(firstdrassettingComponent);
         firstScene.addGameObject(firstDrawSettingGamebject);
 
         //カメラオブジェクト
         let cameraGameobject = new GameObject(canvas.getContext("webgl"),
-            undefined, undefined, undefined, undefined, undefined, new Transfrom());
+            undefined, undefined, undefined, undefined,
+            undefined, new Transfrom([0, 0, 0], [0, 0, 0]), firstScene);
+        let cameraComponent = new CameraComponent(cameraGameobject);
+        cameraGameobject.addComponent(cameraComponent);
+        firstScene.addGameObject(cameraGameobject);
+        firstScene.setCamera(cameraGameobject);
     }
 }
 
@@ -90,11 +150,13 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
     let canvaslist = document.getElementsByClassName(canvasClassName);
 
     for (const canvas of canvaslist) {
-        let tempGameObject = createGameObject(canvas, shader, geometoryData,);
-        let component = new Component(tempGameObject);
-        tempGameObject.addComponent(component);
+        let tempGameObject = createGameObject(canvas, shader, geometoryData,
+            new Transfrom([0, 0, -3.2], [0, 0, 0]), firstScene);
         let meshrenderComponent = new MeshRenderComponent(tempGameObject);
         tempGameObject.addComponent(meshrenderComponent);
+
+        let rotateComponent = new RotateComponent(tempGameObject);
+        tempGameObject.addComponent(rotateComponent);
 
         firstScene.addGameObject(tempGameObject);
     }
@@ -107,7 +169,7 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
  */
 function loop() {
     const deltatime = 0.001 * (Date.now() - preFrameTime);
-    console.log("gameobject size : " + firstScene.getGameobjectCount());
+    // console.log("gameobject size : " + firstScene.getGameobjectCount());
 
     firstScene.getGameobjectList().forEach((item) => {
         item.update(deltatime);
@@ -124,7 +186,7 @@ function loop() {
  * @returns {GameObject}
  * @param geometoryData
  */
-function createGameObject(canvas, inputShader, geometoryData) {
+function createGameObject(canvas, inputShader, geometoryData, gameobjectTrannsfrom, scene) {
 
     const gl = canvas.getContext("webgl");
     if (gl == null) {
@@ -163,7 +225,7 @@ function createGameObject(canvas, inputShader, geometoryData) {
     const buffers = Myrenderer.initBuffers(gl, geometoryData);
     return new GameObject(gl, vsSource,
         fsSource, shaderInfo, buffers, geometoryData,
-        new Transfrom([-0, 0, -3.2]));
+        gameobjectTrannsfrom, scene);
 }
 
 /**
@@ -263,7 +325,7 @@ class Myrenderer {
      * @param geometoryData
      * @param gameObjectTramsform
      */
-    static drawElements(gl, programInfo, buffers, elapsedtime, geometoryData, gameObjectTramsform) {
+    static drawElements(gl, programInfo, buffers, elapsedtime, geometoryData, gameObjectTramsform, scene) {
         const fieldOfView = 45 * Math.PI / 180;   // in radians
         const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
         const zNear = 0.1;
@@ -275,6 +337,19 @@ class Myrenderer {
 
         const modelViewMatrix = mat4.create();
         mat4.translate(modelViewMatrix, modelViewMatrix, gameObjectTramsform.position);
+        // mat4.rotateX(modelViewMatrix, modelViewMatrix, gameObjectTramsform.rotation[0]);
+        // mat4.rotateY(modelViewMatrix, modelViewMatrix, gameObjectTramsform.rotation[1]);
+        // mat4.rotateZ(modelViewMatrix, modelViewMatrix, gameObjectTramsform.rotation[2]);
+
+        const camera = scene.getCamera();
+        const cameraComponet = camera.getComponent();
+        const cameraUp = cameraComponet.getUp();
+        const cameraPosition = cameraComponet.getPosition();
+        const cameraLookAt = cameraComponet.getLookat();
+        const viewMatrix = mat4.create();
+        mat4.lookAt(viewMatrix, cameraPosition, cameraLookAt, cameraUp);
+        mat4.multiply(modelViewMatrix, modelViewMatrix, viewMatrix);
+
         // let rad = elapsedtime * Math.PI / 180;
         // mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 1, 1]);
         //vertexshaderの頂点情報（aVertexPosition）
@@ -326,7 +401,7 @@ class Myrenderer {
  * メッシュの情報やシェーダの情報を保持する
  */
 class GameObject {
-    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform) {
+    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform, scene) {
         this.gl = gl;
         this.vsSource = vsSource;
         this.fsSource = fsSource;
@@ -337,6 +412,13 @@ class GameObject {
         this.geometorydata = geometorydata;
         this.transform = transform;
         this.componentList = [];
+        this.scene = scene;
+    }
+
+    getComponent() {
+        if (this.componentList.length == 1) {
+            return this.componentList[0];
+        }
     }
 
     addComponent(component) {
@@ -349,7 +431,7 @@ class GameObject {
      */
     update(deltatime) {
         for (const component of this.componentList) {
-            component.update();
+            component.update(deltatime);
         }
         this.elapsedTime += deltatime;
     }
@@ -359,7 +441,7 @@ class GameObject {
      */
     draw() {
         Myrenderer.drawElements(this.gl, this.shaderinfo,
-            this.buffer, this.elapsedTime, this.geometorydata, this.transform);
+            this.buffer, this.elapsedTime, this.geometorydata, this.transform, this.scene);
     }
 
     /**
@@ -394,8 +476,9 @@ class GameObject {
  * 座標を保持するクラス
  */
 class Transfrom {
-    constructor(position) {
+    constructor(position, rotation = [0, 0, 0]) {
         this.position = position;
+        this.rotation = rotation;
     }
 }
 
