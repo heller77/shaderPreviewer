@@ -80,30 +80,7 @@ function createGameObject(canvas, inputShader, geometoryData) {
             time: gl.getUniformLocation(shaderProgram, "time"),
         },
     };
-    let width = canvas.clientWidth;
-    let height = canvas.clientHeight;
-    let aspect = width / height;
-    // const positions = [
-    //     -1.0 * aspect, -1.0, 0,
-    //     aspect, -1.0, 0,
-    //     -1.0 * aspect, 1.0, 0,
-    //     aspect, 1.0, 0,
-    // ];
-    const positions = geometoryData.positionData;
-    const vertexCount = geometoryData.vertexCount;
-    // const elementData = [0, 1, 3, 0, 3, 2];
-    const elementData = geometoryData.elementData;
-    // const elementCount = 6;
-    const elementCount = geometoryData.elmentCount;
-    // const geometorydata = {
-    //     positionData: positions,
-    //     //頂点の個数（drawElementsならelementCount使うので不要かも？）
-    //     vertexCount: vertexCount,
-    //     //indexの配列
-    //     elementData: elementData,
-    //     //indexの個数
-    //     elmentCount: elementCount,
-    // };
+
     console.log(geometoryData);
     const buffers = Myrenderer.initBuffers(gl, geometoryData);
     return new GameObject(gl, vsSource,
