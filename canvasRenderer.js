@@ -15,13 +15,12 @@ let preFrameTime = 0.0;
  * @param canvasClassName canvasのclass名を文字列で指定
  * @param shader シェーダコードを文字列で指定
  */
-function AllCanvasRendering(canvasClassName, shader) {
+function AllCanvasRendering(canvasClassName, shader, geometoryData) {
     //canvasをすべて取得
     let canvaslist = document.getElementsByClassName(canvasClassName);
 
     for (const canvas of canvaslist) {
-
-        let tempGameObject = createGameObject(canvas, shader);
+        let tempGameObject = createGameObject(canvas, shader, geometoryData);
         gameobjectList.push(tempGameObject);
     }
     preFrameTime = Date.now();
@@ -47,7 +46,7 @@ function loop() {
  * @param inputShader
  * @returns {GameObject}
  */
-function createGameObject(canvas, inputShader) {
+function createGameObject(canvas, inputShader, geometoryData) {
 
     const gl = canvas.getContext("webgl");
     if (gl == null) {
@@ -84,28 +83,32 @@ function createGameObject(canvas, inputShader) {
     let width = canvas.clientWidth;
     let height = canvas.clientHeight;
     let aspect = width / height;
-    const positions = [
-        -1.0 * aspect, -1.0, 0,
-        aspect, -1.0, 0,
-        -1.0 * aspect, 1.0, 0,
-        aspect, 1.0, 0,
-    ];
-
-    const elementData = [0, 1, 3, 0, 3, 2];
-    const elementCount = 6;
-    const geometorydata = {
-        positionData: positions,
-        //頂点の個数（drawElementsならelementCount使うので不要かも？）
-        vertexCount: 4,
-        //indexの配列
-        elementData: elementData,
-        //indexの個数
-        elmentCount: elementCount,
-    };
-    const buffers = Myrenderer.initBuffers(gl, geometorydata);
+    // const positions = [
+    //     -1.0 * aspect, -1.0, 0,
+    //     aspect, -1.0, 0,
+    //     -1.0 * aspect, 1.0, 0,
+    //     aspect, 1.0, 0,
+    // ];
+    const positions = geometoryData.positionData;
+    const vertexCount = geometoryData.vertexCount;
+    // const elementData = [0, 1, 3, 0, 3, 2];
+    const elementData = geometoryData.elementData;
+    // const elementCount = 6;
+    const elementCount = geometoryData.elmentCount;
+    // const geometorydata = {
+    //     positionData: positions,
+    //     //頂点の個数（drawElementsならelementCount使うので不要かも？）
+    //     vertexCount: vertexCount,
+    //     //indexの配列
+    //     elementData: elementData,
+    //     //indexの個数
+    //     elmentCount: elementCount,
+    // };
+    console.log(geometoryData);
+    const buffers = Myrenderer.initBuffers(gl, geometoryData);
     return new GameObject(gl, vsSource,
-        fsSource, shaderInfo, buffers, geometorydata,
-        new Transfrom([-0, 0, -1.2]));
+        fsSource, shaderInfo, buffers, geometoryData,
+        new Transfrom([-0, 0, -3.2]));
 }
 
 /**
@@ -191,9 +194,9 @@ class Myrenderer {
      * @param buffers
      * @param elapsedtime
      * @param geometoryData
-     * @param tramsform
+     * @param gameObjectTramsform
      */
-    static drawElements(gl, programInfo, buffers, elapsedtime, geometoryData, tramsform) {
+    static drawElements(gl, programInfo, buffers, elapsedtime, geometoryData, gameObjectTramsform) {
 
         gl.clearColor(0., 0., 0., 1);
         gl.clearDepth(1.0);
@@ -215,7 +218,7 @@ class Myrenderer {
             fieldOfView, aspect, zNear, zFar);
 
         const modelViewMatrix = mat4.create();
-        mat4.translate(modelViewMatrix, modelViewMatrix, tramsform.position);
+        mat4.translate(modelViewMatrix, modelViewMatrix, gameObjectTramsform.position);
         // let rad = elapsedtime * Math.PI / 180;
         // mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 1, 1]);
         //vertexshaderの頂点情報（aVertexPosition）
@@ -260,8 +263,6 @@ class Myrenderer {
             gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_SHORT, offset);
         }
     }
-
-
 }
 
 /**
@@ -331,4 +332,59 @@ class Transfrom {
     }
 }
 
+/**
+ *
+ * @param path
+ * @returns {Promise<unknown>} .positionData
+ */
+async function getGeometory(path) {
+    return new Promise((resolve => {
+        const loader = new THREE.GLTFLoader();
+        loader.load(path, (data) => {
+                console.log(data);
+                // console.log("box");
+                // console.log(data.scene.children[0].geometry.attributes.position.array);
+                const returnData = {
+                    //頂点の配列
+                    positionData: data.scene.children[0].geometry.attributes.position.array,
+                    //頂点の個数（drawElementsならelementCount使うので不要かも？）
+                    vertexCount: data.scene.children[0].geometry.attributes.position.count,
+                    //indexの配列
+                    elementData: data.scene.children[0].geometry.index.array,
+                    //indexの個数
+                    elmentCount: data.scene.children[0].geometry.index.count,
+                    // uvData: data.scene.children[0].geometry.attributes.uv.array,
+                };
+                console.log(returnData);
+                resolve(returnData);
+            }
+        );
+    }));
+}
+
+async function getGeometoryByArray(array) {
+    return new Promise((resolve => {
+        const loader = new THREE.GLTFLoader();
+        loader.parse(array, "./", (data) => {
+                console.log(data);
+                // console.log("box");
+                // console.log(data.scene.children[0].geometry.attributes.position.array);
+                const returnData = {
+                    //頂点の配列
+                    positionData: data.scene.children[0].geometry.attributes.position.array,
+                    //頂点の個数（drawElementsならelementCount使うので不要かも？）
+                    vertexCount: data.scene.children[0].geometry.attributes.position.count,
+                    //indexの配列
+                    elementData: data.scene.children[0].geometry.index.array,
+                    //indexの個数
+                    elmentCount: data.scene.children[0].geometry.index.count,
+                    // uvData: data.scene.children[0].geometry.attributes.uv.array,
+                };
+
+                console.log("data by file : " + returnData);
+                resolve(returnData);
+            }
+        );
+    }));
+}
 
