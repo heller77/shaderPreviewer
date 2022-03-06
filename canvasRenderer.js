@@ -4,7 +4,7 @@ class Component {
     }
 
     update() {
-        console.log(this.gameobject.transform.position);
+        // console.log(this.gameobject.transform.position);
     }
 }
 
