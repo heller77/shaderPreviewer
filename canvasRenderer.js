@@ -85,7 +85,8 @@ function createGameObject(canvas, inputShader, geometoryData) {
     const buffers = Myrenderer.initBuffers(gl, geometoryData);
     return new GameObject(gl, vsSource,
         fsSource, shaderInfo, buffers, geometoryData,
-        new Transfrom([-0, 0, -3.2]));
+        new Transfrom([-0, 0, -3.2]), () => {
+        });
 }
 
 /**
@@ -247,7 +248,8 @@ class Myrenderer {
  * メッシュの情報やシェーダの情報を保持する
  */
 class GameObject {
-    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform) {
+    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform, updateMethod = () => {
+    }) {
         this.gl = gl;
         this.vsSource = vsSource;
         this.fsSource = fsSource;
@@ -257,6 +259,7 @@ class GameObject {
         this.elapsedTime = 0.0;
         this.geometorydata = geometorydata;
         this.transform = transform;
+        this.updateMethod = updateMethod;
     }
 
     /**
@@ -264,6 +267,7 @@ class GameObject {
      * @param deltatime
      */
     update(deltatime) {
+        this.updateMethod();
         this.elapsedTime += deltatime;
         this.draw();
     }
