@@ -63,7 +63,6 @@ async function modelChange(evt) {
 
 
     const fileString = await fileRead(reader);
-    console.log("filestring : \n" + fileString);
     const geometry = await getGeometoryByArray(fileString);
     reset(fsSource, geometry);
 }
@@ -71,7 +70,6 @@ async function modelChange(evt) {
 async function fileRead(reader) {
     return new Promise((resolve => {
         reader.onload = function () {
-            console.log(reader.result);
             resolve(reader.result);
         };
     }));
