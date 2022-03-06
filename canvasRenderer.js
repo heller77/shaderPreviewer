@@ -1,3 +1,13 @@
+class Component {
+    constructor(gameobject) {
+        this.gameobject = gameobject;
+    }
+
+    update() {
+        console.log(this.gameobject.transform.position);
+    }
+}
+
 /**
  * このjavascriptをインポートしてAllCanvawsRendering関数を呼べば、html上のcanvasに指定のshaderで描画できます
  * ただし、このスクリプトを使用するには、glmatrix.jsが必要です。
@@ -21,9 +31,12 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
     let canvaslist = document.getElementsByClassName(canvasClassName);
 
     for (const canvas of canvaslist) {
+
         let tempGameObject = createGameObject(canvas, shader, geometoryData, () => {
-            console.log("gameobject update");
         });
+        let component = new Component(tempGameObject);
+        tempGameObject.addComponent(component);
+
         gameobjectList.push(tempGameObject);
     }
     preFrameTime = Date.now();
@@ -266,6 +279,11 @@ class GameObject {
         this.geometorydata = geometorydata;
         this.transform = transform;
         this.updateMethod = updateMethod;
+        this.componentList = [];
+    }
+
+    addComponent(component) {
+        this.componentList.push(component);
     }
 
     /**
@@ -274,6 +292,9 @@ class GameObject {
      */
     update(deltatime) {
         this.updateMethod();
+        for (const component of this.componentList) {
+            component.update();
+        }
         this.elapsedTime += deltatime;
         this.draw();
     }
