@@ -46,6 +46,8 @@ void main(void){
     `;
 
 async function previewMainLoop() {
+    document.getElementById("shaderInput").value = fsSource;
+    document.getElementById("updateShaderButton").onclick = updateShader;
     const geometry = await getGeometory("./../../model/torus.gltf");
     init("modelPreviewCanvas");
     AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
@@ -76,4 +78,12 @@ async function fileRead(reader) {
             resolve(reader.result);
         };
     }));
+}
+
+function updateShader() {
+    let newfsSource = document.getElementById("shaderInput").value;
+    fsSource = document.getElementById("shaderInput").value;
+    firstScene.getGameobjectList().forEach((item) => {
+        item.updateFsshader(newfsSource);
+    });
 }
