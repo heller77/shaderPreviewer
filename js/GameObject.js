@@ -26,8 +26,8 @@ export class GameObject {
     }
 
     updateFsshader(fsSource) {
-        console.log("shaderinfo" + this.shaderinfo);
-        console.log("program" + this.shaderinfo.program);
+        // console.log("shaderinfo" + this.shaderinfo);
+        // console.log("program" + this.shaderinfo.program);
         let shaderProgram = Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
 
         this.shaderinfo = {

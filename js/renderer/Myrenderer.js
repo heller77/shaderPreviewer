@@ -36,7 +36,7 @@ export class Myrenderer {
         return shaderObj;
     }
 
-    static async initBuffers(gl, geometorydata) {
+    static initBuffers(gl, geometorydata) {
         //バッファの作成
         const positionBuffer = gl.createBuffer();
         //このバッファはgl.ARRAY_BUFFERとしている。
@@ -94,8 +94,8 @@ export class Myrenderer {
         //エレメントを定義
         let verticesIndexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, verticesIndexBuffer);
-        console.log("index");
-        console.log(geometorydata.elementData);
+        // console.log("index");
+        // console.log(geometorydata.elementData);
         const indexTest = [
             0, 1, 2,
             1, 2, 3,
