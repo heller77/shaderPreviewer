@@ -158,7 +158,8 @@ void main(void){
         1 * width, 0,
         0, 0
     ];
-    const geometorydata = await getGeometory("./../../model/monkey.glb");
+    const repositoryPath = "/webglPractice/model/";
+    const geometorydata = await getGeometory(repositoryPath + "monkey.glb");
     // const geometorydata = {
     //     positionData: positions,
     //     //頂点の個数（drawElementsならelementCount使うので不要かも？）
