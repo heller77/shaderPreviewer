@@ -44,11 +44,13 @@ void main(void){
     gl_FragColor=vec4(vec3(0.5),0);
 }
     `;
+const repositoryPath = "/webglPractice/";
 
 async function previewMainLoop() {
     document.getElementById("shaderInput").value = fsSource;
     document.getElementById("updateShaderButton").onclick = updateShader;
-    const geometry = await getGeometory("./../../model/onlyGlb.glb");
+    const geometry = await getGeometory(repositoryPath + "model/onlyGlb.glb");
+
     init("modelPreviewCanvas");
     AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
 }
