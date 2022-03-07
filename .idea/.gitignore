@@ -6,3 +6,4 @@
 /dataSources.local.xml
 # エディターベースの HTTP クライアントリクエスト
 /httpRequests/
+./../filepath.js
