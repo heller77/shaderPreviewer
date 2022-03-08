@@ -7,7 +7,7 @@ let fsSource = `
 precision mediump float;
 uniform float time;
 uniform vec2  resolution;
-
+varying lowp vec4 vColor;
 const float sphereSize = 1.0;
 float PI =3.14;
 const vec3 lightDir = vec3(1.,1. , 0.277);
@@ -43,8 +43,9 @@ void main(void){
         rPos.y+=2.*time;
     }
     gl_FragColor=vec4(vec3((rLen*0.02)*abs(ray*2.)),0);
-    gl_FragColor=vec4(vec3(0.5),0);
+    gl_FragColor=vColor;
 }
+    
     `;
 
 
