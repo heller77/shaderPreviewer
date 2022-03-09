@@ -52,7 +52,7 @@ void main(void){
 async function previewMainLoop() {
     document.getElementById("shaderInput").value = fsSource;
     document.getElementById("updateShaderButton").onclick = updateShader;
-    const geometry = await getGeometory(repositoryPath + "model/torus.gltf");
+    const geometry = await getGeometory(repositoryPath + "model/box.gltf");
 
     init("modelPreviewCanvas");
     AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
@@ -73,11 +73,6 @@ async function modelChange(evt) {
     const position = filename.lastIndexOf(".");
     const extension = filename.slice(position + 1);
     console.log("拡張し；　" + extension);
-    // if (extension === "gltf") {
-    //     reader.readAsText(file);
-    // } else if (extension === "glb") {
-    //     reader.readAsBinaryString(file);
-    // }
     reader.readAsArrayBuffer(file);
     const fileString = await fileRead(reader);
     const geometry = await getGeometoryByArray(fileString);

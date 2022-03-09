@@ -1,3 +1,18 @@
+class GlMatrixRapper {
+    static rotatex(out, a, radian) {
+        let rotatematrix = mat3.create();
+        mat3.identity(rotatematrix);
+        let c = Math.cos(radian);
+        let s = Math.sin(radian);
+        rotatematrix[4] = c;
+        rotatematrix[5] = -1 * s;
+        rotatematrix[7] = s;
+        rotatematrix[8] = c;
+        mat3.multiply(out, a, rotatematrix);
+        return out;
+    }
+}
+
 class Component {
     constructor(gameobject) {
         this.gameobject = gameobject;
@@ -36,31 +51,86 @@ class CameraComponent extends Component {
         return this.lookat;
     }
 
-    getPosition() {
-        return this.gameobject.transform.position;
+    getTransform() {
+        return this.gameobject.transform;
     }
 
     getRotation() {
         return this.gameobject.transform.rotation;
     }
 
+    setUpVector(up) {
+        this.up = up;
+    }
+
+    setLookat(lookat) {
+        this.lookat = lookat;
+    }
+
     update(deltatime) {
-        console.log(Input.cameraRotate()[0]);
-        const xRad = Input.cameraRotate()[0];
-        let x = Math.cos(xRad) * this.radius;
-        console.log("x : " + x);
-        let y = Math.sin(xRad) * this.radius;
-        this.gameobject.transform.position[0] = x;
-        this.gameobject.transform.position[2] = y;
+
+        //up
+        // this.up = Input.cameraUp();
+        //位置計算
+        // let position = this.gameobject.transform.position;
+        //
+        // let x = position[0];
+        // let y = position[1];
+        // let z = position[2];
+        // let cameraTotarget = [this.lookat[0] - x, this.lookat[1] - y, this.lookat[2] - z];
+        //
+        // const xyRad = Input.cameraRotate()[0];
+        // const fai = Input.cameraRotate()[1];
+        //
+        // let angleAxis = quat.create();
+        // let axis = [0, 1, 0];
+        // axis = Input.getaxis();
+        // quat.setAxisAngle(angleAxis, axis, 360.0 / 100 * deltatime);
+        // let positionVec = vec3.fromValues(x, y, z);
+        // let center = vec3.fromValues(0, 0, 0);
+        //
+        // vec3.negate(center, center);
+        // vec3.add(positionVec, positionVec, center);
+        // vec3.transformQuat(positionVec, positionVec, angleAxis);
+        // vec3.negate(center, center);
+        // vec3.add(positionVec, positionVec, center);
+        //位置計算
+        let position = this.gameobject.transform.position;
+
+        let x = position[0];
+        let y = position[1];
+        let z = position[2];
+
+
+        let angleAxis = quat.create();
+        let axis = [0, 1, 0];
+        axis = Input.getaxis();
+        quat.setAxisAngle(angleAxis, axis, 360.0 / 100 * deltatime);
+        let positionVec = vec3.fromValues(x, y, z);
+        let center = vec3.fromValues(0, 0, 0);
+
+        vec3.negate(center, center);
+        vec3.add(positionVec, positionVec, center);
+        vec3.transformQuat(positionVec, positionVec, angleAxis);
+        vec3.negate(center, center);
+        vec3.add(positionVec, positionVec, center);
+
+
+        this.gameobject.transform.position = [positionVec[0], positionVec[1], positionVec[2]];
+
+        document.getElementById("camerainfo").innerText =
+            "camera position : " + this.gameobject.transform.position + "\n cameraup : " + this.up +
+            "\n position vec : " + vec3.str(positionVec);
+
     }
 }
 
-class RotateComponent extends Component {
+class ObjectMoveComponent extends Component {
     update(deltatime) {
-        // console.log(this.gameobject.transform.rotation);
-        let rotate = this.gameobject.transform.rotation;
-        rotate = Input.cameraRotate();
-        this.gameobject.transform.rotation = rotate;
+        // this.gameobject.transform.position = [positionVec[0], positionVec[1], positionVec[2]];
+        document.getElementById("objectinfo").innerText
+            = "objectposition :" + this.gameobject.transform.position + " position vec : " + positionVec;
+
     }
 }
 
@@ -106,8 +176,29 @@ class Scene {
 class Input {
     static cameraRotate() {
         let rotatex = document.getElementById("rotateX").value;
-        // console.log(rotatex);
-        return [rotatex, 0, 0];
+        let rotatey = document.getElementById("rotateY").value;
+        document.getElementById("inputlog").innerText = "x :" + rotatex + " y :" + rotatey;
+        return [rotatex, rotatey, 0];
+    }
+
+    static cameraUp() {
+        let x = document.getElementById("cameraupX").value;
+        let y = document.getElementById("cameraupY").value;
+        let z = document.getElementById("cameraupZ").value;
+        return [x, y, z];
+    }
+
+    static getaxis() {
+        let x = document.getElementById("axisX").value;
+        let y = document.getElementById("axisY").value;
+        let z = document.getElementById("axisZ").value;
+        return [x, y, z];
+    }
+}
+
+class Debug {
+    static log(string) {
+
     }
 }
 
@@ -129,7 +220,7 @@ function init(canvasClassName) {
         //カメラオブジェクト
         let cameraGameobject = new GameObject(canvas.getContext("webgl"),
             undefined, undefined, undefined, undefined,
-            undefined, new Transfrom([0, 0, 0], [0, 0, 0]), firstScene);
+            undefined, new Transfrom([0, 3, 20], [0.1, 0, 0]), firstScene);
         let cameraComponent = new CameraComponent(cameraGameobject);
         cameraGameobject.addComponent(cameraComponent);
         firstScene.addGameObject(cameraGameobject);
@@ -151,11 +242,11 @@ function AllCanvasRendering(canvasClassName, shader, geometoryData) {
 
     for (const canvas of canvaslist) {
         let tempGameObject = createGameObject(canvas, shader, geometoryData,
-            new Transfrom([0, 0, -3.2], [0, 0, 0]), firstScene);
+            new Transfrom([0, 0, 0], [0, 0, 0]), firstScene);
         let meshrenderComponent = new MeshRenderComponent(tempGameObject);
         tempGameObject.addComponent(meshrenderComponent);
 
-        let rotateComponent = new RotateComponent(tempGameObject);
+        let rotateComponent = new ObjectMoveComponent(tempGameObject);
         tempGameObject.addComponent(rotateComponent);
 
         firstScene.addGameObject(tempGameObject);
@@ -199,8 +290,10 @@ function createGameObject(canvas, inputShader, geometoryData, gameobjectTrannsfr
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
     varying vec2 texcoord1;
+    varying lowp vec4 vColor;
     void main() {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vColor=aVertexPosition;
     }
   `;
     const fsSource = inputShader;
@@ -312,7 +405,7 @@ class Myrenderer {
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
 
-        gl.enable(gl.BLEND);
+        // gl.enable(gl.BLEND);
         gl.blendFunc(gl.ONE, gl.ONE);
     }
 
@@ -336,19 +429,28 @@ class Myrenderer {
             fieldOfView, aspect, zNear, zFar);
 
         const modelViewMatrix = mat4.create();
-        mat4.translate(modelViewMatrix, modelViewMatrix, gameObjectTramsform.position);
-        // mat4.rotateX(modelViewMatrix, modelViewMatrix, gameObjectTramsform.rotation[0]);
-        // mat4.rotateY(modelViewMatrix, modelViewMatrix, gameObjectTramsform.rotation[1]);
-        // mat4.rotateZ(modelViewMatrix, modelViewMatrix, gameObjectTramsform.rotation[2]);
+        const modelMatrix = mat4.create();
+        mat4.translate(modelMatrix, modelMatrix, gameObjectTramsform.position);
+        mat4.rotateX(modelMatrix, modelMatrix, gameObjectTramsform.rotation[0]);
+        mat4.rotateY(modelMatrix, modelMatrix, gameObjectTramsform.rotation[1]);
+        mat4.rotateZ(modelMatrix, modelMatrix, gameObjectTramsform.rotation[2]);
 
         const camera = scene.getCamera();
         const cameraComponet = camera.getComponent();
         const cameraUp = cameraComponet.getUp();
-        const cameraPosition = cameraComponet.getPosition();
+        const cameraPosition = cameraComponet.getTransform().position;
+        const cameraRotatation = cameraComponet.getTransform().rotation;
         const cameraLookAt = cameraComponet.getLookat();
         const viewMatrix = mat4.create();
+
+        // mat4.translate(viewMatrix, viewMatrix, cameraPosition);
+        // mat4.rotateX(viewMatrix, viewMatrix, cameraRotatation[0]);
+        // mat4.rotateY(viewMatrix, viewMatrix, cameraRotatation[1]);
+        // mat4.rotateZ(viewMatrix, viewMatrix, cameraRotatation[2]);
         mat4.lookAt(viewMatrix, cameraPosition, cameraLookAt, cameraUp);
-        mat4.multiply(modelViewMatrix, modelViewMatrix, viewMatrix);
+        // mat4.invert(viewMatrix, viewMatrix);
+
+        mat4.multiply(modelViewMatrix, viewMatrix, modelMatrix);
 
         // let rad = elapsedtime * Math.PI / 180;
         // mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 1, 1]);
