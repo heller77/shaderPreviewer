@@ -1,22 +1,30 @@
-// SafariっぽいUAのとき、compositionend イベントの直後かどうか判定できるようにする
-const isSafari = navigator.userAgent.includes("Safari/") && navigator.userAgent.includes("Version/");
-let isCompositionFinished = true;
-input.addEventListener("keydown", (e) => {
-    //safariだったらisCompositionFinishedがtrueの時の
-    if (isSafari && isCompositionFinished) {
-        isCompositionFinished = false;
-        return;
+export class Input {
+    static cameraRotate() {
+        let rotatex = document.getElementById("rotateX").value;
+        let rotatey = document.getElementById("rotateY").value;
+        document.getElementById("inputlog").innerText = "x :" + rotatex + " y :" + rotatey;
+        return [rotatex, rotatey, 0];
     }
-    if (e.key !== "Enter" || e.isComposing) {
-        return;
+
+    static cameraUp() {
+        let x = document.getElementById("cameraupX").value;
+        let y = document.getElementById("cameraupY").value;
+        let z = document.getElementById("cameraupZ").value;
+        return [x, y, z];
     }
-});
 
-input.addEventListener("compositionstart", () => {
-    isCompositionFinished = false;
-});
+    static getaxis() {
+        let x = document.getElementById("axisX").value;
+        let y = document.getElementById("axisY").value;
+        let z = document.getElementById("axisZ").value;
+        return [x, y, z];
+    }
 
-input.addEventListener("compositionend", () => {
-    isCompositionFinished = true;
-});
+    static getloopflag() {
+        return document.getElementById("loopflag").checked;
+    }
 
+    static xRotateflag() {
+        return document.getElementById("xflag").checked;
+    }
+}

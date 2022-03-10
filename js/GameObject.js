@@ -1,7 +1,11 @@
-import {Myrenderer} from "./renderer/Myrenderer.js";
+/**
+ * 描画する物体を表すクラス
+ * メッシュの情報やシェーダの情報を保持する
+ */
+import {Myrenderer} from "./Myrenderer.js";
 
 export class GameObject {
-    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform) {
+    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform, scene) {
         this.gl = gl;
         this.vsSource = vsSource;
         this.fsSource = fsSource;
@@ -11,23 +15,48 @@ export class GameObject {
         this.elapsedTime = 0.0;
         this.geometorydata = geometorydata;
         this.transform = transform;
+        this.componentList = [];
+        this.scene = scene;
     }
 
+    getComponent() {
+        if (this.componentList.length == 1) {
+            return this.componentList[0];
+        }
+    }
+
+    addComponent(component) {
+        this.componentList.push(component);
+    }
+
+    /**
+     * 毎フレーム呼ばれる関数
+     * @param deltatime
+     */
     update(deltatime) {
+        for (const component of this.componentList) {
+            component.update(deltatime);
+        }
         this.elapsedTime += deltatime;
-        this.draw();
     }
 
+    /**
+     * 描画する関数
+     */
     draw() {
-
-        // console.log("elapse time is " + this.elapsedTime);
         Myrenderer.drawElements(this.gl, this.shaderinfo,
-            this.buffer, this.elapsedTime, this.geometorydata, this.transform);
+            this.buffer, this.elapsedTime, this.geometorydata, this.transform, this.scene);
     }
 
+    /**
+     * シェーダを更新する関数
+     * @param fsSource
+     */
     updateFsshader(fsSource) {
-        // console.log("shaderinfo" + this.shaderinfo);
-        // console.log("program" + this.shaderinfo.program);
+        if (this.fsSource == undefined) {
+            console.log("fssource is undifine");
+            return;
+        }
         let shaderProgram = Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
 
         this.shaderinfo = {
@@ -43,13 +72,6 @@ export class GameObject {
                 time: this.gl.getUniformLocation(shaderProgram, "time"),
             },
         };
-        console.log("更新後のshaderprogram");
-        console.log(this.shaderinfo);
-    }
-}
 
-export class Transfrom {
-    constructor(position) {
-        this.position = position;
     }
 }

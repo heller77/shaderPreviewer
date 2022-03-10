@@ -7,7 +7,6 @@
     <script src="lib/build/three.min.js"></script>
     <script src="./lib/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.6.1/gl-matrix-min.js"></script>
-    <script src="./canvasRenderer.js"></script>
     <script src="js/PreviewMainLoop.js" type="module"></script>
 </head>
 <body>
@@ -43,8 +42,13 @@
 <div>
     <label> axis </label>
     <input type="number" id="axisX" value="0">
-    <input type="number" id="axisY" value="0">
-    <input type="number" id="axisZ" value="1">
+    <input type="number" id="axisY" value="1">
+    <input type="number" id="axisZ" value="0">
+</div>
+<input type="checkbox" id="loopflag" checked>
+<div>
+    <input type="checkbox" id="xflag" checked>
+    <input type="checkbox" id="yflag">
 </div>
 </body>
 </html>

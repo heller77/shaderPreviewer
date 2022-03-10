@@ -1,8 +1,10 @@
 import {repositoryPath} from "../filepath.js";
+import {AllCanvasRendering, firstScene, getGeometory, getGeometoryByArray, init} from "../canvasRenderer.js";
 
 window.addEventListener("load", previewMainLoop);
 document.getElementById("modelfileUpload").addEventListener("change", modelChange);
-
+document.getElementById("xflag").addEventListener("change", obserbeChangebox);
+document.getElementById("yflag").addEventListener("change", obserbeChangebox);
 let fsSource = `
 precision mediump float;
 uniform float time;
@@ -94,4 +96,14 @@ function updateShader() {
     firstScene.getGameobjectList().forEach((item) => {
         item.updateFsshader(newfsSource);
     });
+}
+
+function obserbeChangebox(event) {
+    var t = event.target.id;
+    console.log(t);
+    if (document.getElementById(t).checked == true) {
+        document.getElementById("xflag").checked = false;
+        document.getElementById("yflag").checked = false;
+        document.getElementById(t).checked = true;
+    }
 }
