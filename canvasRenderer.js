@@ -63,7 +63,6 @@ function mouseMove(e) {
     //     y *= sq;
     // }
     // q.rotate(r, [y, x, 0.0], qt);
-    console.log("x :" + x + " y : " + y);
 }
 
 
@@ -105,7 +104,6 @@ function loop() {
     // console.log("gameobject size : " + firstScene.getGameobjectCount());
 
     firstScene.getGameobjectList().forEach((item) => {
-   
         item.update(deltatime);
 
     });

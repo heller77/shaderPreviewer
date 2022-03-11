@@ -107,7 +107,7 @@ async function fileRead(reader) {
 function updateShader() {
     // let newfsSource = document.getElementById("shaderInput").value;
     let newfsSource = editor.getValue();
-    fsSource = editor.getValue;
+    fsSource = editor.getValue();
     firstScene.getGameobjectList().forEach((item) => {
         item.updateFsshader(newfsSource);
     });
@@ -125,6 +125,7 @@ function obserbeChangebox(event) {
 
 async function outputSelectedValueAndText(obj) {
     var model = obj.target.value;
+    if (model === "null") return;
     console.log(model);
     const geometry = await presetModelSelect(model);
     reset(fsSource, geometry);

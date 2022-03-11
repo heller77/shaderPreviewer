@@ -38,7 +38,7 @@ export class Myrenderer {
         gl.compileShader(shaderObj);
 
         if (!gl.getShaderParameter(shaderObj, gl.COMPILE_STATUS)) {
-            alert(shaderObj.type + "shader error:" + gl.getShaderInfoLog(shaderObj));
+            alert(shaderObj.type + " shader error:" + gl.getShaderInfoLog(shaderObj));
             // alert("シェーダのコンパイルに失敗しました");
             gl.deleteShader(shaderObj);
             return null;
