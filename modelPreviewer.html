@@ -3,52 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="./css/index.css" rel="stylesheet">
+    <link href="./css/modelPreview.css" rel="stylesheet">
     <script src="lib/build/three.min.js"></script>
     <script src="./lib/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.6.1/gl-matrix-min.js"></script>
     <script src="js/PreviewMainLoop.js" type="module"></script>
 </head>
 <body>
-<canvas class="modelPreviewCanvas" width="640" height="480"></canvas>
-<textarea id="shaderInput" rows=40></textarea>
-<canvas class="modelPreviewCanvas"></canvas>
-<input type="file" id="modelfileUpload"></input>
-<button type="button" id="updateShaderButton">更新</button>
-<div>
-    <input type="range" id="rotateX" name="rotateX" min="-6" max="6" step="0.1" value="0">
-    <label>xrotate</label>
+<header>
+    <nav>
+        <ul>
+            <li id="logo"> shader preview</li>
+            <div id="headerintroduction">
+                <li>glslを3dモデルに割り当てた時の描画が見られるwebアプリ</li>
+            </div>
+        </ul>
+    </nav>
+</header>
+<div class="viewarea">
+    <canvas class="modelPreviewCanvas" width="640" height="480"></canvas>
+
+    <div id="modelinfo">
+        モデル情報
+        <!--        <div>x <input class="transformInput" id="rotationx"> y <input class="transformInput" id="rotationy"> z-->
+        <!--            <input-->
+        <!--                    class="transformInput" id="rotationz">-->
+        <!--        </div>-->
+        <div>
+            3Dモデル選択
+
+
+            <select name="example" id="modelpresetselect">
+                <option value="null"></option>
+                <option value="box.gltf">box</option>
+                <option value="sphere.gltf">sphere</option>
+                <option value="monkey.gltf">monkey</option>
+            </select>
+            or
+            <label id="modelfileUploadlabael">
+                <input type="file" id="modelfileUpload">ファイル選択
+            </label>
+            現在選択中のファイル：
+        </div>
+        <div>
+            <!--    <textarea id="shaderInput" rows=10 spellcheck="false"></textarea>-->
+            <button type="button" id="updateShaderButton">シェーダーコンパイル</button>
+        </div>
+
+    </div>
+
 </div>
 
-<div>
-    <input type="range" id="rotateY" name="rotateX" min="-6" max="6" step="0.1" value="0">
-    <label>yrotate</label>
-</div>
-<div id="inputlog">
-    log
-</div>
-<div id="objectinfo">
-    log
-</div>
-<div id="camerainfo">
-    camerainfo
-</div>
-<div>
-    <label> up </label>
-    <input type="number" id="cameraupX" value="0">
-    <input type="number" id="cameraupY" value="1">
-    <input type="number" id="cameraupZ" value="0">
-</div>
-<div>
-    <label> axis </label>
-    <input type="number" id="axisX" value="0">
-    <input type="number" id="axisY" value="1">
-    <input type="number" id="axisZ" value="0">
-</div>
-<input type="checkbox" id="loopflag" checked>
-<div>
-    <input type="checkbox" id="xflag" checked>
-    <input type="checkbox" id="yflag">
-</div>
+<div id="editor"></div>
+
+
+<!--<div>-->
+<!--    <input type="range" id="rotateX" name="rotateX" min="-6" max="6" step="0.1" value="0">-->
+<!--    <label>xrotate</label>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <input type="range" id="rotateY" name="rotateX" min="-6" max="6" step="0.1" value="0">-->
+<!--    <label>yrotate</label>-->
+<!--</div>-->
+<!--<div id="inputlog">-->
+<!--    log-->
+<!--</div>-->
+<!--<div id="objectinfo">-->
+<!--    log-->
+<!--</div>-->
+<!--<div id="camerainfo">-->
+<!--    camerainfo-->
+<!--</div>-->
+<!--<div>-->
+<!--    <label> up </label>-->
+<!--    <input type="number" id="cameraupX" value="0">-->
+<!--    <input type="number" id="cameraupY" value="1">-->
+<!--    <input type="number" id="cameraupZ" value="0">-->
+<!--</div>-->
+<!--<div>-->
+<!--    <label> axis </label>-->
+<!--    <input type="number" id="axisX" value="0">-->
+<!--    <input type="number" id="axisY" value="1">-->
+<!--    <input type="number" id="axisZ" value="0">-->
+<!--</div>-->
+<!--<input type="checkbox" id="loopflag" checked>-->
+<!--<div>-->
+<!--    <input type="checkbox" id="xflag" checked>-->
+<!--    <input type="checkbox" id="yflag">-->
+<!--</div>-->
+<footer></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js" type="text/javascript" charset="utf-8"></script>
+
+
 </body>
+
 </html>

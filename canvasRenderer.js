@@ -6,7 +6,6 @@ import {CameraComponent} from "./js/CameraComponent.js";
 import {Myrenderer} from "./js/Myrenderer.js";
 import {MeshRenderComponent} from "./js/MeshRenderComponent.js";
 import {ObjectMoveComponent} from "./js/ObjectMoveComponent.js";
-import {Input} from "./js/Input.js";
 
 export function vec3fixed(vec3) {
     let fractionDigits = 0;
@@ -106,9 +105,9 @@ function loop() {
     // console.log("gameobject size : " + firstScene.getGameobjectCount());
 
     firstScene.getGameobjectList().forEach((item) => {
-        if (Input.getloopflag()) {
-            item.update(deltatime);
-        }
+   
+        item.update(deltatime);
+
     });
     preFrameTime = Date.now();
 

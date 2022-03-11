@@ -3,10 +3,11 @@ import {AllCanvasRendering, firstScene, getGeometory, getGeometoryByArray, init}
 
 window.addEventListener("load", previewMainLoop);
 document.getElementById("modelfileUpload").addEventListener("change", modelChange);
-document.getElementById("xflag").addEventListener("change", obserbeChangebox);
-document.getElementById("yflag").addEventListener("change", obserbeChangebox);
-let fsSource = `
-precision mediump float;
+// document.getElementById("xflag").addEventListener("change", obserbeChangebox);
+// document.getElementById("yflag").addEventListener("change", obserbeChangebox);
+document.getElementById("modelpresetselect").addEventListener("change", outputSelectedValueAndText);
+
+let fsSource = `precision mediump float;
 uniform float time;
 uniform vec2  resolution;
 varying lowp vec4 vColor;
@@ -47,14 +48,27 @@ void main(void){
     gl_FragColor=vec4(vec3((rLen*0.02)*abs(ray*2.)),0);
     gl_FragColor=vColor;
 }
-    
     `;
 
+let editor;
+
+async function presetModelSelect(filename) {
+    const geometry = await getGeometory(repositoryPath + "model/" + filename);
+    return geometry;
+}
 
 async function previewMainLoop() {
-    document.getElementById("shaderInput").value = fsSource;
+    editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/c_cpp");
+    editor.setValue(fsSource);
+    // document.getElementById("editor").innerText
+    editor.setHighlightActiveLine(false);
+    // document.getElementById("shaderInput").value = fsSource;
     document.getElementById("updateShaderButton").onclick = updateShader;
-    const geometry = await getGeometory(repositoryPath + "model/box.gltf");
+
+    // const geometry = await getGeometory(repositoryPath + "model/box.gltf");
+    const geometry = await presetModelSelect("box.gltf");
 
     init("modelPreviewCanvas");
     AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
@@ -91,8 +105,9 @@ async function fileRead(reader) {
 }
 
 function updateShader() {
-    let newfsSource = document.getElementById("shaderInput").value;
-    fsSource = document.getElementById("shaderInput").value;
+    // let newfsSource = document.getElementById("shaderInput").value;
+    let newfsSource = editor.getValue();
+    fsSource = editor.getValue;
     firstScene.getGameobjectList().forEach((item) => {
         item.updateFsshader(newfsSource);
     });
@@ -106,4 +121,11 @@ function obserbeChangebox(event) {
         document.getElementById("yflag").checked = false;
         document.getElementById(t).checked = true;
     }
+}
+
+async function outputSelectedValueAndText(obj) {
+    var model = obj.target.value;
+    console.log(model);
+    const geometry = await presetModelSelect(model);
+    reset(fsSource, geometry);
 }

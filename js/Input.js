@@ -14,9 +14,10 @@ export class Input {
     }
 
     static getaxis() {
-        let x = document.getElementById("axisX").value;
-        let y = document.getElementById("axisY").value;
-        let z = document.getElementById("axisZ").value;
+        // let x = document.getElementById("axisX").value;
+        // let y = document.getElementById("axisY").value;
+        // let z = document.getElementById("axisZ").value;
+        let x = 0, y = 1, z = 0;
         return [x, y, z];
     }
 

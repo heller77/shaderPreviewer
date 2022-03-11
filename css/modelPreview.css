@@ -1,0 +1,122 @@
+body {
+    background-color: #1E1E1E;
+    padding: 0px;
+    color: white;
+}
+
+p {
+    font-size: 30px;
+    margin: 1%;
+}
+
+
+#shaderInput {
+    margin-top: 20px;
+    padding: 1%;
+    width: 100%;
+}
+
+#updateShaderButton {
+    margin-left: 1%;
+    margin-right: auto;
+    padding: 10px;
+}
+
+#editor {;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 5%;
+    /*position: absolute;*/
+    width: 99%;
+    height: 500px;
+    font-size: 17px;
+}
+
+
+#modelfileUpload {
+    position: relative;
+    top: 10px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+
+#modelfileUploadlabael {
+    padding: 5px 30px;
+    color: #ffffff;
+    background-color: #384878;
+    cursor: pointer;
+}
+
+#modelpresetselect {
+    padding: 5px 30px;
+}
+
+.viewarea {
+    margin: 1%;
+    display: flex;
+}
+
+.modelPreviewCanvas {
+    width: 50%;
+    height: 500px;
+}
+
+#modelinfo {
+    width: 50%;
+    background-color: #5e5e5e;
+    font-size: 20px;
+    display: flex;
+    flex-flow: column;
+    gap: 5% 11%;
+    /*margin-top: 1%;*/
+    /*margin-left: 1%;*/
+    padding: 1% 5% 0 1%;
+}
+
+.transformInput {
+    width: 30px;
+}
+
+header {
+    width: 100%;
+    height: 60px;
+    background-color: gray;
+
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    margin: 0 auto;
+    width: 95%;
+    height: 100%;
+}
+
+nav ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+}
+
+nav ul li {
+    margin: auto 0;
+}
+
+#logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#headerintroduction {
+    margin: auto;
+    margin-right: 1em;
+}

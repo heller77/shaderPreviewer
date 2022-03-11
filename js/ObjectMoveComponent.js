@@ -1,6 +1,5 @@
 import {Component} from "./Component.js";
 import {Input} from "./Input.js";
-import {vec3fixed} from "../canvasRenderer.js";
 
 let elapsedRasianx = 0;
 
@@ -49,6 +48,6 @@ export class ObjectMoveComponent extends Component {
         // quat.rotateZ(rotationquart, rotationquart, nowRotattion[2]);
         quat.multiply(rotationquart, rotationquart, angleAxis);
         this.gameobject.transform.rotation = rotationquart;
-        document.getElementById("objectinfo").innerText = "objectposition :" + vec3fixed(this.gameobject.transform.position);
+        // document.getElementById("objectinfo").innerText = "objectposition :" + vec3fixed(this.gameobject.transform.position);
     }
 }

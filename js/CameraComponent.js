@@ -1,5 +1,4 @@
 import {Component} from "./Component.js";
-import {vec3fixed} from "../canvasRenderer.js";
 import {Input} from "./Input.js";
 
 export class CameraComponent extends Component {
@@ -70,8 +69,7 @@ export class CameraComponent extends Component {
         quat.rotateX(rotationquart, rotationquart, nowRotattion[0]);
         quat.rotateY(rotationquart, rotationquart, nowRotattion[1]);
         quat.rotateZ(rotationquart, rotationquart, nowRotattion[2]);
-        document.getElementById("camerainfo").innerText =
-            "camera position : " + vec3fixed(this.gameobject.transform.position) + "\n cameraup : " + this.up;
+        // document.getElementById("camerainfo").innerText = "camera position : " + vec3fixed(this.gameobject.transform.position) + "\n cameraup : " + this.up;
 
     }
 }
