@@ -128,14 +128,17 @@ function createGameObject(canvas, inputShader, geometoryData, gameobjectTrannsfr
     }
     const vsSource = `
     attribute vec4 aVertexPosition;
-    
+    attribute vec3 aNormal;
+      
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
     varying vec2 texcoord1;
     varying lowp vec4 vColor;
+    varying lowp vec3 normal;
     void main() {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
       vColor=aVertexPosition;
+      normal=aNormal;
     }
   `;
     const fsSource = inputShader;
@@ -146,6 +149,7 @@ function createGameObject(canvas, inputShader, geometoryData, gameobjectTrannsfr
         program: shaderProgram,
         attribLocations: {
             vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+            normal: gl.getAttribLocation(shaderProgram, "aNormal")
             // uv: gl.getAttribLocation(shaderProgram, "uv"),
         },
         uniformLocations: {
@@ -185,6 +189,8 @@ export async function getGeometory(path) {
                     elementData: data.scene.children[0].geometry.index.array,
                     //indexの個数
                     elmentCount: data.scene.children[0].geometry.index.count,
+                    normalData: data.scene.children[0].geometry.attributes.normal.array,
+                    normalCount: data.scene.children[0].geometry.attributes.normal.count,
                     // uvData: data.scene.children[0].geometry.attributes.uv.array,
                 };
                 console.log(returnData);

@@ -56,6 +56,8 @@ export class GameObject {
         if (this.fsSource == undefined) {
             console.log("fssource is undifine");
             return;
+        } else {
+            console.log("fssource update");
         }
         let shaderProgram = Myrenderer.initShaderProgram(this.gl, this.vsSource, fsSource);
 
@@ -63,7 +65,8 @@ export class GameObject {
             program: shaderProgram,
             attribLocations: {
                 vertexPosition: this.gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
-                uv: this.gl.getAttribLocation(shaderProgram, "uv"),
+                normal: this.gl.getAttribLocation(shaderProgram, "aNormal"),
+                // uv: this.gl.getAttribLocation(shaderProgram, "uv"),
             },
             uniformLocations: {
                 projectionMatrix: this.gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
