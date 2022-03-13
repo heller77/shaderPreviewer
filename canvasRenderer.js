@@ -216,6 +216,8 @@ export async function getGeometoryByArray(array) {
                     elementData: data.scene.children[0].geometry.index.array,
                     //indexの個数
                     elmentCount: data.scene.children[0].geometry.index.count,
+                    normalData: data.scene.children[0].geometry.attributes.normal.array,
+                    normalCount: data.scene.children[0].geometry.attributes.normal.count,
                     // uvData: data.scene.children[0].geometry.attributes.uv.array,
                 };
 
