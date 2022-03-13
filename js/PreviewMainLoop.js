@@ -5,51 +5,22 @@ window.addEventListener("load", previewMainLoop);
 document.getElementById("modelfileUpload").addEventListener("change", modelChange);
 // document.getElementById("xflag").addEventListener("change", obserbeChangebox);
 // document.getElementById("yflag").addEventListener("change", obserbeChangebox);
-document.getElementById("modelpresetselect").addEventListener("change", outputSelectedValueAndText);
+document.getElementById("modelpresetselect").addEventListener("change", modelpresetselect);
 
 let fsSource = `precision mediump float;
 uniform float time;
 uniform vec2  resolution;
 varying lowp vec4 vColor;
 varying lowp vec3 normal;
-const float sphereSize = 1.0;
+
 float PI =3.14;
 const vec3 lightDir = vec3(1.,1. , 0.277);
-float sdSpere(vec3 p){
-    return length(p)-sphereSize;
-}
-float sdBox( vec3 p, vec3 b )
-{
-  vec3 q = abs(p) - b;
-  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
-}
-float distanceFunc(vec3 p){
-    // p.x=p.x+11.*cos(time*2.);
-    return max(sdBox(mod(p,4.)-1.5,vec3(1.5,1.,1.)),sdSpere(mod(p,4.)-2.));
-}
+
 
 void main(void){
-    vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
-    vec3 cPos = vec3(0.0,  0.0,  2.0);
-    vec3 cDir = vec3(0.0,  0.0, -1.0);
-    vec3 cUp  = vec3(0.0,  1.0,  0.0);
-    vec3 cSide = cross(cDir, cUp);
-    float targetDepth = 1.0;
-    vec3 ray = normalize(cSide * p.x + cUp * p.y + cDir * targetDepth);
-    float distance = 0.0;
-    float rLen = 0.0;
-    vec3  rPos = cPos;
-    float depth=0.;
-    for(int i = 0; i <58; i++){
-        distance = distanceFunc(rPos);
-        rLen += distance;
-        rPos = cPos + ray * rLen;
-        rPos.y+=2.*time;
-    }
-    gl_FragColor=vec4(vec3((rLen*0.02)*abs(ray*2.)),0);
-    // gl_FragColor=vec4(normal,1);
-}
-    `;
+    float color=dot(normal,lightDir);
+    gl_FragColor=vec4(vec3(color),1);
+}`;
 
 let editor;
 
@@ -68,13 +39,18 @@ async function previewMainLoop() {
     // document.getElementById("shaderInput").value = fsSource;
     document.getElementById("updateShaderButton").onclick = updateShader;
 
+    // document.getElementById("nowselectmodel").innerText = "(現在選択中のファイル：box)";
+    setNowSelectModelDisplay("プリセットの" + "sphere");
     // const geometry = await getGeometory(repositoryPath + "model/box.gltf");
-    const geometry = await presetModelSelect("box.gltf");
+    const geometry = await presetModelSelect("sphere.gltf");
 
     init("modelPreviewCanvas");
     AllCanvasRendering("modelPreviewCanvas", fsSource, geometry);
 }
 
+function setNowSelectModelDisplay(finename) {
+    document.getElementById("nowselectmodel").innerText = "(現在選択中のファイル：" + finename + ")";
+}
 function reset(fsSource, geometry) {
     firstScene.removeAllGameObject();
     init("modelPreviewCanvas");
@@ -90,6 +66,7 @@ async function modelChange(evt) {
     const position = filename.lastIndexOf(".");
     const extension = filename.slice(position + 1);
     console.log("拡張し；　" + extension);
+    setNowSelectModelDisplay(filename);
     reader.readAsArrayBuffer(file);
     const fileString = await fileRead(reader);
     const geometry = await getGeometoryByArray(fileString);
@@ -124,10 +101,11 @@ function obserbeChangebox(event) {
     }
 }
 
-async function outputSelectedValueAndText(obj) {
+async function modelpresetselect(obj) {
     var model = obj.target.value;
     if (model === "null") return;
     console.log(model);
+    setNowSelectModelDisplay("プリセットの" + model);
     const geometry = await presetModelSelect(model);
     reset(fsSource, geometry);
 }

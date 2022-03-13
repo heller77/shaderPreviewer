@@ -36,14 +36,16 @@
             <select name="example" id="modelpresetselect">
                 <option value="null"></option>
                 <option value="box.gltf">box</option>
-                <option value="sphere.gltf">sphere</option>
+                <option value="sphere.gltf" selected>sphere</option>
                 <option value="monkey.gltf">monkey</option>
             </select>
             or
             <label id="modelfileUploadlabael">
                 <input type="file" id="modelfileUpload">ファイル選択
             </label>
-            (現在選択中のファイル：)
+            <div id="nowselectmodel">
+                (現在選択中のファイル：)
+            </div>
         </div>
         <div>
             <!--    <textarea id="shaderInput" rows=10 spellcheck="false"></textarea>-->
