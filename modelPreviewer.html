@@ -10,7 +10,8 @@
     <script src="js/PreviewMainLoop.js" type="module"></script>
     <meta property="og:title" content="shader preview">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://raw.githubusercontent.com/heller77/webglPractice/master/shaderpreviewogp.png">
+    <meta property="og:image"
+          content="https://raw.githubusercontent.com/heller77/webglPractice/master/shaderpreviewogp.png">
 </head>
 <body>
 <header>
@@ -32,24 +33,34 @@
         <!--            <input-->
         <!--                    class="transformInput" id="rotationz">-->
         <!--        </div>-->
-        <div>
-            3Dモデル選択
+        <div class="component">
+            <div class="componentTitle">3Dモデル選択</div>
 
-
-            <select name="example" id="modelpresetselect">
-                <option value="null"></option>
-                <option value="box.gltf">box</option>
-                <option value="sphere.gltf" selected>sphere</option>
-                <option value="monkey.gltf">monkey</option>
-            </select>
-            or
-            <label id="modelfileUploadlabael">
-                <input type="file" id="modelfileUpload">ファイル選択
-            </label>
+            <div>
+                <select name="example" id="modelpresetselect">
+                    <option value="null"></option>
+                    <option value="box.gltf">box</option>
+                    <option value="sphere.gltf" selected>sphere</option>
+                    <option value="monkey.gltf">monkey</option>
+                </select>
+                or
+                <label id="modelfileUploadlabael">
+                    <input type="file" id="modelfileUpload">ファイル選択
+                </label>
+            </div>
             <div id="nowselectmodel">
                 (現在選択中のファイル：)
             </div>
         </div>
+        <div id="urlgenerator" class="component">
+            <div class="componentTitle">リンク生成</div>
+
+            <div>
+                glslファイルのあるrawファイルのurlを入力 <input id="glslfileurl">
+                <button type="button" id="generateUrl">url生成</button>
+            </div>
+        </div>
+
         <div>
             <!--    <textarea id="shaderInput" rows=10 spellcheck="false"></textarea>-->
             <button type="button" id="updateShaderButton">シェーダーコンパイル</button>

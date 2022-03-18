@@ -6,6 +6,7 @@ document.getElementById("modelfileUpload").addEventListener("change", modelChang
 // document.getElementById("xflag").addEventListener("change", obserbeChangebox);
 // document.getElementById("yflag").addEventListener("change", obserbeChangebox);
 document.getElementById("modelpresetselect").addEventListener("change", modelpresetselect);
+document.getElementById("generateUrl").addEventListener("click", generateUrl);
 
 let fsSource = `precision mediump float;
 uniform float time;
@@ -31,20 +32,28 @@ async function presetModelSelect(filename) {
 
 async function getglslFromUrl(url) {
     return fetch(url)
-        .then(response => response.text())
-        .then(data => {
+        .then(response => {
+                if (!response.ok) {
+                    console.log("not ok");
+                    alert("glslコードのurlが不正です");
+                    throw new Error("glslurl not found");
+                }
+                return response.text();
+            }
+        ).then(data => {
             console.log(data);
             fsSource = data;
-            console.log("b");
+        }).catch(error => {
+            console.log(error);
         });
 }
 
 async function previewMainLoop() {
     let glslref = getParam("glslref");
-    if (glslref === null) {
+    if (glslref === null || glslref === "") {
         glslref = 'https://gist.githubusercontent.com/heller77/8b9aaf61f959ed032c9d61e463245f38/raw/6873d563965cdf6f14de870eea745784c53d3327/samplecode.glsl';
     }
-    console.log(getParam("glslref"));
+
     await getglslFromUrl(glslref);
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
@@ -127,11 +136,32 @@ async function modelpresetselect(obj) {
 }
 
 function getParam(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    const urlparse = new URLSearchParams(location.search);
+    return urlparse.get(name);
+
 }
+function generateUrl() {
+    let glslurl = document.getElementById("glslfileurl").value;
+    if (glslurl === "") {
+        alert("urlを入力してください");
+        return;
+    }
+    console.log(glslurl);
+    let nowurl = window.location.href;
+    let newurl = nowurl + "&" + "glslref=" + glslurl;
+
+    sendtoclipboard(newurl);
+    document.execCommand(newurl);
+    alert("url copied!");
+
+}
+
+function sendtoclipboard(string) {
+    const tmparea = document.createElement("textarea");
+    tmparea.value = string;
+    document.body.appendChild(tmparea);
+    tmparea.select();
+    document.execCommand("copy");
+    document.body.removeChild(tmparea);
+}
+

@@ -17,7 +17,7 @@ p {
 }
 
 #updateShaderButton {
-    margin-left: 1%;
+    margin-left: 0%;
     margin-right: auto;
     padding: 10px;
 }
@@ -76,6 +76,18 @@ input[type="file"] {
     padding: 1% 5% 0 1%;
 }
 
+.component {
+    padding: 1.4%;
+    border: solid 1px white;
+    display: flex;
+    flex-flow: column;
+    gap: 11% 31%;
+}
+
+.componentTitle {
+    padding-bottom: 1%;
+}
+
 .transformInput {
     width: 30px;
 }
@@ -120,3 +132,8 @@ nav ul li {
     margin: auto;
     margin-right: 1em;
 }
+
+#urlgenerator {
+    padding: 10px;
+}
+
