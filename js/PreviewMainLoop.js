@@ -29,7 +29,26 @@ async function presetModelSelect(filename) {
     return geometry;
 }
 
+async function getglslFromUrl(url) {
+    return fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+            fsSource = data;
+            console.log("b");
+        });
+}
+
 async function previewMainLoop() {
+    let gltfref = getParam("glslref");
+    if (gltfref === "") {
+        console.log("null");
+        gltfref = 'https://gist.githubusercontent.com/heller77/8b9aaf61f959ed032c9d61e463245f38/raw/6873d563965cdf6f14de870eea745784c53d3327/samplecode.glsl';
+    }
+    console.log(getParam("glslref"));
+    console.log("a");
+    await getglslFromUrl(gltfref);
+    console.log("a");
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/c_cpp");
@@ -108,4 +127,14 @@ async function modelpresetselect(obj) {
     setNowSelectModelDisplay("プリセットの" + model);
     const geometry = await presetModelSelect(model);
     reset(fsSource, geometry);
+}
+
+function getParam(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
