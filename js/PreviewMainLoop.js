@@ -40,14 +40,14 @@ async function getglslFromUrl(url) {
 }
 
 async function previewMainLoop() {
-    let gltfref = getParam("glslref");
-    if (gltfref === "") {
+    let glslref = getParam("glslref");
+    if (glslref === "") {
         console.log("null");
-        gltfref = 'https://gist.githubusercontent.com/heller77/8b9aaf61f959ed032c9d61e463245f38/raw/6873d563965cdf6f14de870eea745784c53d3327/samplecode.glsl';
+        glslref = 'https://gist.githubusercontent.com/heller77/8b9aaf61f959ed032c9d61e463245f38/raw/6873d563965cdf6f14de870eea745784c53d3327/samplecode.glsl';
     }
     console.log(getParam("glslref"));
     console.log("a");
-    await getglslFromUrl(gltfref);
+    await getglslFromUrl(glslref);
     console.log("a");
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
