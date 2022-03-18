@@ -148,7 +148,12 @@ function generateUrl() {
     }
     console.log(glslurl);
     let nowurl = window.location.href;
-    let newurl = nowurl + "&" + "glslref=" + glslurl;
+    let newurl = "";
+    if (location.search === "") {
+        newurl = nowurl + "?" + "glslref=" + glslurl;
+    } else {
+        newurl = nowurl + "&" + "glslref=" + glslurl;
+    }
 
     sendtoclipboard(newurl);
     document.execCommand(newurl);
