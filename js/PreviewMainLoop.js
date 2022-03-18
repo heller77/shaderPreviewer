@@ -41,14 +41,11 @@ async function getglslFromUrl(url) {
 
 async function previewMainLoop() {
     let glslref = getParam("glslref");
-    if (glslref === "") {
-        console.log("null");
+    if (glslref === null) {
         glslref = 'https://gist.githubusercontent.com/heller77/8b9aaf61f959ed032c9d61e463245f38/raw/6873d563965cdf6f14de870eea745784c53d3327/samplecode.glsl';
     }
     console.log(getParam("glslref"));
-    console.log("a");
     await getglslFromUrl(glslref);
-    console.log("a");
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/c_cpp");
