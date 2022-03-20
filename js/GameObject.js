@@ -5,18 +5,19 @@
 import {Myrenderer} from "./Myrenderer.js";
 
 export class GameObject {
-    constructor(gl, vsSource, fsSource, shaderinfo, buffer, geometorydata, transform, scene) {
+    constructor(gl, vsSource, fsSource, shaderinfo, geometorydata, transform, scene) {
         this.gl = gl;
         this.vsSource = vsSource;
         this.fsSource = fsSource;
         this.shaderinfo = shaderinfo;
-        this.buffer = buffer;
         //elapsedtimeは経過時間
         this.elapsedTime = 0.0;
         this.geometorydata = geometorydata;
         this.transform = transform;
         this.componentList = [];
         this.scene = scene;
+        if (geometorydata !== undefined)
+            this.buffer = Myrenderer.initBuffers(this.gl, this.geometorydata, shaderinfo);
     }
 
     getComponent() {
@@ -66,7 +67,7 @@ export class GameObject {
             attribLocations: {
                 vertexPosition: this.gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
                 normal: this.gl.getAttribLocation(shaderProgram, "aNormal"),
-                // uv: this.gl.getAttribLocation(shaderProgram, "uv"),
+                uv: this.gl.getAttribLocation(shaderProgram, "auv"),
             },
             uniformLocations: {
                 projectionMatrix: this.gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),

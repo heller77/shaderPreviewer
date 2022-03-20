@@ -8,19 +8,20 @@ document.getElementById("modelfileUpload").addEventListener("change", modelChang
 document.getElementById("modelpresetselect").addEventListener("change", modelpresetselect);
 document.getElementById("generateUrl").addEventListener("click", generateUrl);
 
-let fsSource = `precision mediump float;
+let fsSource = `#version 300 es
+precision mediump float;
 uniform float time;
 uniform vec2  resolution;
-varying lowp vec4 vColor;
-varying lowp vec3 normal;
+in vec4 vColor;
+in vec3 normal;
+out vec4 fragColor;
 
 float PI =3.14;
 const vec3 lightDir = vec3(1.,1. , 0.277);
 
 
 void main(void){
-    float color=dot(normal,lightDir);
-    gl_FragColor=vec4(vec3(color),1);
+    fragColor=vec4(normal,1);
 }`;
 
 let editor;
@@ -51,10 +52,11 @@ async function getglslFromUrl(url) {
 async function previewMainLoop() {
     let glslref = getParam("glslref");
     if (glslref === null || glslref === "") {
-        glslref = 'https://gist.githubusercontent.com/heller77/8b9aaf61f959ed032c9d61e463245f38/raw/6873d563965cdf6f14de870eea745784c53d3327/samplecode.glsl';
+        // glslref = 'https://gist.githubusercontent.com/heller77/8b9aaf61f959ed032c9d61e463245f38/raw/990cfc982dc8228aa30c4b1677c40ab198aa9d46/samplecode.glsl';
+    } else {
+        await getglslFromUrl(glslref);
     }
 
-    await getglslFromUrl(glslref);
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/c_cpp");
@@ -76,6 +78,7 @@ async function previewMainLoop() {
 function setNowSelectModelDisplay(finename) {
     document.getElementById("nowselectmodel").innerText = "(現在選択中のファイル：" + finename + ")";
 }
+
 function reset(fsSource, geometry) {
     firstScene.removeAllGameObject();
     init("modelPreviewCanvas");
@@ -140,6 +143,7 @@ function getParam(name, url) {
     return urlparse.get(name);
 
 }
+
 function generateUrl() {
     let glslurl = document.getElementById("glslfileurl").value;
     if (glslurl === "") {

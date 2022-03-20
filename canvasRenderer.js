@@ -29,17 +29,17 @@ export function init(canvasClassName) {
     let canvaslist = document.getElementsByClassName(canvasClassName);
     for (const canvas of canvaslist) {
         //描画の初期化を行うためのオブジェクト
-        let firstDrawSettingGamebject = new GameObject(canvas.getContext("webgl"), undefined,
+        let firstDrawSettingGamebject = new GameObject(canvas.getContext("webgl2"), undefined,
             undefined, undefined, undefined,
-            undefined, undefined, firstScene);
+            undefined, firstScene);
         const firstdrassettingComponent = new FirstDrawSettingComponent(firstDrawSettingGamebject);
         firstDrawSettingGamebject.addComponent(firstdrassettingComponent);
         firstScene.addGameObject(firstDrawSettingGamebject);
 
         //カメラオブジェクト
-        let cameraGameobject = new GameObject(canvas.getContext("webgl"),
+        let cameraGameobject = new GameObject(canvas.getContext("webgl2"),
             undefined, undefined, undefined, undefined,
-            undefined, new Transfrom([0, 0, -10], [0, 0, 0]), firstScene);
+            new Transfrom([0, 0, -10], [0, 0, 0]), firstScene);
         let cameraComponent = new CameraComponent(cameraGameobject);
         cameraGameobject.addComponent(cameraComponent);
         firstScene.addGameObject(cameraGameobject);
@@ -121,36 +121,39 @@ function loop() {
  */
 function createGameObject(canvas, inputShader, geometoryData, gameobjectTrannsfrom, scene) {
 
-    const gl = canvas.getContext("webgl");
+    const gl = canvas.getContext("webgl2");
     if (gl == null) {
         alert("webglが初期が出来ない!\n" +
             "ブラウザが対応してない可能性があります");
     }
-    const vsSource = `
-    attribute vec4 aVertexPosition;
-    attribute vec3 aNormal;
+    const vsSource = `#version 300 es
+    in vec4 aVertexPosition;
+    in vec3 aNormal;
+    in vec2 auv;
       
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
-    varying vec2 texcoord1;
-    varying lowp vec4 vColor;
-    varying lowp vec3 normal;
+    out vec2 texcoord1;
+    out vec4 vColor;
+    out vec3 normal;
+    out vec2 uv;
     void main() {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
       vColor=aVertexPosition;
       normal=aNormal;
+      uv=auv;
     }
   `;
     const fsSource = inputShader;
 
     const shaderProgram = Myrenderer.initShaderProgram(gl, vsSource, fsSource);
-
+    gl.useProgram(shaderProgram);
     let shaderInfo = {
         program: shaderProgram,
         attribLocations: {
             vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
-            normal: gl.getAttribLocation(shaderProgram, "aNormal")
-            // uv: gl.getAttribLocation(shaderProgram, "uv"),
+            normal: gl.getAttribLocation(shaderProgram, "aNormal"),
+            uv: gl.getAttribLocation(shaderProgram, "auv"),
         },
         uniformLocations: {
             projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
@@ -161,9 +164,9 @@ function createGameObject(canvas, inputShader, geometoryData, gameobjectTrannsfr
     };
 
     console.log(geometoryData);
-    const buffers = Myrenderer.initBuffers(gl, geometoryData);
+    // const buffers = Myrenderer.initBuffers(gl, geometoryData);
     return new GameObject(gl, vsSource,
-        fsSource, shaderInfo, buffers, geometoryData,
+        fsSource, shaderInfo, geometoryData,
         gameobjectTrannsfrom, scene);
 }
 
@@ -191,7 +194,8 @@ export async function getGeometory(path) {
                     elmentCount: data.scene.children[0].geometry.index.count,
                     normalData: data.scene.children[0].geometry.attributes.normal.array,
                     normalCount: data.scene.children[0].geometry.attributes.normal.count,
-                    // uvData: data.scene.children[0].geometry.attributes.uv.array,
+                    uvData: data.scene.children[0].geometry.attributes.uv.array,
+                    uvCount: data.scene.children[0].geometry.attributes.uv.count,
                 };
                 console.log(returnData);
                 resolve(returnData);
@@ -218,7 +222,9 @@ export async function getGeometoryByArray(array) {
                     elmentCount: data.scene.children[0].geometry.index.count,
                     normalData: data.scene.children[0].geometry.attributes.normal.array,
                     normalCount: data.scene.children[0].geometry.attributes.normal.count,
-                    // uvData: data.scene.children[0].geometry.attributes.uv.array,
+                    //uv
+                    uvData: data.scene.children[0].geometry.attributes.uv.array,
+                    uvCount: data.scene.children[0].geometry.attributes.uv.count,
                 };
 
                 console.log("data by file : " + returnData);

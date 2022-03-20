@@ -52,13 +52,33 @@ export class Myrenderer {
      * @param geometorydata
      * @returns {{index: AudioBuffer | WebGLBuffer, position: AudioBuffer | WebGLBuffer}}
      */
-    static initBuffers(gl, geometorydata) {
+    static initBuffers(gl, geometorydata, shaderinfo) {
+
+        //vao
+        const vao = gl.createVertexArray();
+        gl.bindVertexArray(vao);
+
+
         //バッファの作成
         const positionBuffer = gl.createBuffer();
         //このバッファはgl.ARRAY_BUFFERとしている。
         // gl.ARRAY_BUFFERは頂点座標とかのバッファ
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(geometorydata.positionData), gl.STATIC_DRAW);
+        //
+        {
+            const numComponents = 3;
+            const type = gl.FLOAT;
+            const normalize = false;
+            const stride = 0;
+            const offset = 0;
+            gl.vertexAttribPointer(
+                shaderinfo.attribLocations.vertexPosition,
+                numComponents, type, normalize, stride, offset
+            );
+            gl.enableVertexAttribArray(
+                shaderinfo.attribLocations.vertexPosition);
+        }
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
         //エレメントを定義
@@ -66,16 +86,52 @@ export class Myrenderer {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, verticesIndexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(geometorydata.elementData), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
         //法線を定義
         let normalBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(geometorydata.normalData), gl.STATIC_DRAW);
+        {
+            const normalNumComponent = 3;
+            const type = gl.FLOAT;
+            const normalize = false;
+            const stride = 0;
+            const offset = 0;
+            gl.vertexAttribPointer(
+                shaderinfo.attribLocations.normal,
+                normalNumComponent, type, normalize, stride, offset
+            );
+            gl.enableVertexAttribArray(
+                shaderinfo.attribLocations.normal);
+        }
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+        //uvを定義
+        let uvBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float64Array(geometorydata.uvData), gl.STATIC_DRAW);
+        {
+            const uvnumComponent = 2;
+            const type = gl.FLOAT;
+            const normalize = false;
+            const stride = 0;
+            const offset = 0;
+            gl.vertexAttribPointer(
+                shaderinfo.attribLocations.uv,
+                uvnumComponent, type, normalize, stride, offset
+            );
+            gl.enableVertexAttribArray(shaderinfo.attribLocations.uv);
+        }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindVertexArray(null);
 
         return {
             position: positionBuffer,
             index: verticesIndexBuffer,
             normal: normalBuffer,
+            uv: uvBuffer,
+            vao: vao,
         };
     }
 
@@ -147,38 +203,51 @@ export class Myrenderer {
         // let rad = elapsedtime * Math.PI / 180;
         // mat4.rotate(modelViewMatrix, modelViewMatrix, rad, [1, 1, 1]);
         //vertexshaderの頂点情報（aVertexPosition）
-        {
-            const numComponents = 3;
-            const type = gl.FLOAT;
-            const normalize = false;
-            const stride = 0;
-            const offset = 0;
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-            //現在の頂点バッファーオブジェクトの一般的な頂点属性に結合して、そのレイアウトを指定します
-            gl.vertexAttribPointer(
-                programInfo.attribLocations.vertexPosition,
-                numComponents, type, normalize, stride, offset
-            );
-            gl.enableVertexAttribArray(
-                programInfo.attribLocations.vertexPosition);
-        }
-        {
-            const type = gl.FLOAT;
-            const normalize = false;
-            const stride = 0;
-            const offset = 0;
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normal);
-            //現在の頂点バッファーオブジェクトの一般的な頂点属性に結合して、そのレイアウトを指定します
-            gl.vertexAttribPointer(
-                programInfo.attribLocations.normal,
-                3, type, normalize, stride, offset
-            );
-            gl.enableVertexAttribArray(
-                programInfo.attribLocations.normal);
-        }
-
+        // {
+        //     const numComponents = 3;
+        //     const type = gl.FLOAT;
+        //     const normalize = false;
+        //     const stride = 0;
+        //     const offset = 0;
+        //
+        //     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+        //     //現在の頂点バッファーオブジェクトの一般的な頂点属性に結合して、そのレイアウトを指定します
+        //     gl.vertexAttribPointer(
+        //         programInfo.attribLocations.vertexPosition,
+        //         numComponents, type, normalize, stride, offset
+        //     );
+        //     gl.enableVertexAttribArray(
+        //         programInfo.attribLocations.vertexPosition);
+        // }
+        // {
+        //     const normalNumComponent = 3;
+        //     const type = gl.FLOAT;
+        //     const normalize = false;
+        //     const stride = 0;
+        //     const offset = 0;
+        //
+        //     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normal);
+        //     //現在の頂点バッファーオブジェクトの一般的な頂点属性に結合して、そのレイアウトを指定します
+        //     gl.vertexAttribPointer(
+        //         programInfo.attribLocations.normal,
+        //         normalNumComponent, type, normalize, stride, offset
+        //     );
+        //     gl.enableVertexAttribArray(
+        //         programInfo.attribLocations.normal);
+        // }
+        // {
+        //     const uvnumComponent = 2;
+        //     const type = gl.FLOAT;
+        //     const normalize = false;
+        //     const stride = 0;
+        //     const offset = 0;
+        //     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.uv);
+        //     gl.vertexAttribPointer(
+        //         programInfo.attribLocations.uv,
+        //         uvnumComponent, type, normalize, stride, offset
+        //     );
+        //     gl.enableVertexAttribArray(programInfo.attribLocations.uv);
+        // }
 
         //どのシェーダ使うかの指定
         gl.useProgram(programInfo.program);
@@ -195,7 +264,8 @@ export class Myrenderer {
         gl.uniform1f(programInfo.uniformLocations.time, elapsedtime);
 
         gl.uniform2f(programInfo.uniformLocations.Resolution, gl.canvas.clientWidth, gl.canvas.clientHeight);
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+
+        gl.bindVertexArray(buffers.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.index);
         {
             const offset = 0;
@@ -205,5 +275,6 @@ export class Myrenderer {
         }
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+        gl.bindVertexArray(null);
     }
 }
