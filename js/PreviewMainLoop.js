@@ -151,13 +151,17 @@ function generateUrl() {
         return;
     }
     console.log(glslurl);
+    const urlparse = new URLSearchParams(location.search);
+    urlparse.set("glslref", glslurl);
     let nowurl = window.location.href;
     let newurl = "";
-    if (location.search === "") {
-        newurl = nowurl + "?" + "glslref=" + glslurl;
-    } else {
-        newurl = nowurl + "&" + "glslref=" + glslurl;
-    }
+    let addtext = urlparse.toString();
+
+    let originurl = nowurl.substr(0, nowurl.indexOf("?"));
+    console.log(originurl);
+
+    newurl = originurl + "?" + addtext;
+
 
     sendtoclipboard(newurl);
     document.execCommand(newurl);
