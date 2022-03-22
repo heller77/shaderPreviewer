@@ -164,9 +164,9 @@ function generateUrl() {
     let nowurl = window.location.href;
     let newurl = "";
     let addtext = urlparse.toString();
-    let originurl=nowurl;
-    if(nowurl.includes("?")) {
-         originurl = nowurl.substr(0, nowurl.indexOf("?"));
+    let originurl = nowurl;
+    if (nowurl.includes("?")) {
+        originurl = nowurl.substr(0, nowurl.indexOf("?"));
     }
     console.log(originurl);
 
