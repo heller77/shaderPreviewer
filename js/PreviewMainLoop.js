@@ -60,6 +60,14 @@ async function previewMainLoop() {
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/c_cpp");
+    editor.$blockScroling = Infinity;
+    //補完
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+    });
+
     editor.setValue(fsSource);
     // document.getElementById("editor").innerText
     editor.setHighlightActiveLine(false);
