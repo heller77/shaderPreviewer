@@ -1,1 +1,1 @@
-export const repositoryPath = "/webglPractice/";
+export const repositoryPath = "/shaderPreviewer/";
