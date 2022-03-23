@@ -109,7 +109,7 @@ export class Myrenderer {
         //uvを定義
         let uvBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float64Array(geometorydata.uvData), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(geometorydata.uvData), gl.STATIC_DRAW);
         {
             const uvnumComponent = 2;
             const type = gl.FLOAT;
