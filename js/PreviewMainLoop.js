@@ -14,6 +14,7 @@ uniform float time;
 uniform vec2  resolution;
 in vec4 vColor;
 in vec3 normal;
+in vec2 uv;
 out vec4 fragColor;
 
 float PI =3.14;
