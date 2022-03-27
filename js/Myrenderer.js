@@ -2,6 +2,8 @@
  * レンダリングUtilityクラス。webglのapiを叩くクラス
  */
 export class Myrenderer {
+    static backgroundColor = [0.1, 0.0, 0.0, 1.0];
+
     /**
      * vertexshaderとfragmentshaderを
      * @param gl
@@ -136,7 +138,11 @@ export class Myrenderer {
     }
 
     static initDraw(gl) {
-        gl.clearColor(0.1, 0., 0., 1);
+        let red = this.backgroundColor[0];
+        let green = this.backgroundColor[1];
+        let blue = this.backgroundColor[2];
+        let alpha = this.backgroundColor[3];
+        gl.clearColor(red, green, blue, alpha);
         gl.clearDepth(1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.depthFunc(gl.LEQUAL);

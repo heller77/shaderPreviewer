@@ -61,7 +61,7 @@ input[type="file"] {
 
 .modelPreviewCanvas {
     width: 50%;
-    height: 500px;
+    height: 600px;
 }
 
 #modelinfo {
@@ -81,7 +81,7 @@ input[type="file"] {
     border: solid 1px white;
     display: flex;
     flex-flow: column;
-    gap: 11% 31%;
+    /*gap: 11% 31%;*/
 }
 
 .componentTitle {

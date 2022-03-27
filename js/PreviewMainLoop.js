@@ -1,5 +1,6 @@
 import {repositoryPath} from "../filepath.js";
 import {AllCanvasRendering, firstScene, getGeometory, getGeometoryByArray, init} from "../canvasRenderer.js";
+import {Myrenderer} from "./Myrenderer.js";
 
 window.addEventListener("load", previewMainLoop);
 document.getElementById("modelfileUpload").addEventListener("change", modelChange);
@@ -7,7 +8,7 @@ document.getElementById("modelfileUpload").addEventListener("change", modelChang
 // document.getElementById("yflag").addEventListener("change", obserbeChangebox);
 document.getElementById("modelpresetselect").addEventListener("change", modelpresetselect);
 document.getElementById("generateUrl").addEventListener("click", generateUrl);
-
+document.getElementById("backgroundColor").addEventListener("change", selectBackGroundColor);
 let fsSource = `#version 300 es
 precision mediump float;
 uniform float time;
@@ -26,6 +27,19 @@ void main(void){
 }`;
 
 let editor;
+
+function selectBackGroundColor() {
+    Myrenderer.backgroundColor = getRGB(document.getElementById("backgroundColor").value);
+    console.log(Myrenderer.backgroundColor);
+    // Myrenderer.backgroundColor = document.getElementById("backgroundColor").value;
+}
+
+function getRGB(colorpickerValue) {
+    let red = parseInt(colorpickerValue.substring(1, 3), 16) / 255;
+    let green = parseInt(colorpickerValue.substring(3, 5), 16) / 255;
+    let blue = parseInt(colorpickerValue.substring(5, 7), 16) / 255;
+    return [red, green, blue, 1.0];
+}
 
 async function presetModelSelect(filename) {
     const geometry = await getGeometory(repositoryPath + "model/" + filename);
