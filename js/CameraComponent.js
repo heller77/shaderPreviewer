@@ -57,19 +57,6 @@ export class CameraComponent extends Component {
 
         this.gameobject.transform.position = [positionVec[0], positionVec[1], positionVec[2]];
 
-        //回転計算
-        let nowRotattion = this.gameobject.transform.rotation;
-        let rotationquart = quat.create();
-        quat.rotateX(rotationquart, rotationquart, nowRotattion[0]);
-        quat.rotateY(rotationquart, rotationquart, nowRotattion[1]);
-        quat.rotateZ(rotationquart, rotationquart, nowRotattion[2]);
-        quat.multiply(rotationquart, rotationquart, angleAxis);
-        this.gameobject.transform.rotation = rotationquart;
-        let cameraup = this.up;
-        quat.rotateX(rotationquart, rotationquart, nowRotattion[0]);
-        quat.rotateY(rotationquart, rotationquart, nowRotattion[1]);
-        quat.rotateZ(rotationquart, rotationquart, nowRotattion[2]);
-        // document.getElementById("camerainfo").innerText = "camera position : " + vec3fixed(this.gameobject.transform.position) + "\n cameraup : " + this.up;
-
+ 
     }
 }
