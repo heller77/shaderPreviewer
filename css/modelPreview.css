@@ -38,7 +38,7 @@ p {
     top: 10px;
 }
 
-input[type="file"] {
+.modelfileUpload {
     display: none;
 }
 

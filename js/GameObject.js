@@ -22,6 +22,10 @@ export class GameObject {
         this.textures = Myrenderer.loadtexture(gl, repositoryPath + "assets/apple1.png");
     }
 
+    setTexturePath(path) {
+        this.textures = Myrenderer.loadtexture(this.gl, repositoryPath + path);
+    }
+
     getComponent() {
         if (this.componentList.length == 1) {
             return this.componentList[0];

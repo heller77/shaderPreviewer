@@ -17,6 +17,7 @@ document.getElementById("modelpresetselect").addEventListener("change", modelpre
 document.getElementById("generateUrl").addEventListener("click", generateUrl);
 document.getElementById("backgroundColor").addEventListener("change", selectBackGroundColor);
 document.getElementById("cameraDistance").addEventListener("input", changeCameraDistance);
+document.getElementById("textureupload01").addEventListener("change", textureUpload);
 let fsSource = `#version 300 es
 precision mediump float;
 uniform float time;
@@ -37,6 +38,28 @@ void main(void){
 }`;
 
 let editor;
+
+function textureUpload() {
+    const targetGameobjct = firstScene.getGameObject("targetObject");
+    console.log(targetGameobjct.elapsedTime);
+    const uploader01 = document.getElementById("textureupload01");
+    const files = uploader01.files;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const imageurl = e.target.result;
+        console.log("url : " + imageurl);
+        targetGameobjct.setTexturePath(imageurl);
+    };
+    for (let i = 0; i < files.length; i++) {
+        let image = new Image();
+        image.onload = () => {
+            console.log("he");
+        };
+        reader.readAsDataURL(files[i]);
+
+    }
+
+}
 
 function selectBackGroundColor() {
     Myrenderer.backgroundColor = getRGB(document.getElementById("backgroundColor").value);
