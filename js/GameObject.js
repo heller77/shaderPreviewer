@@ -23,7 +23,7 @@ export class GameObject {
     }
 
     setTexturePath(path) {
-        this.textures = Myrenderer.loadtexture(this.gl, repositoryPath + path);
+        this.textures = Myrenderer.loadtexture(this.gl, path);
     }
 
     getComponent() {
