@@ -21,6 +21,7 @@ let fsSource = `#version 300 es
 precision mediump float;
 uniform float time;
 uniform vec2  resolution;
+uniform sampler2D sampler01;
 in vec4 vColor;
 in vec3 normal;
 in vec2 uv;
@@ -31,7 +32,8 @@ const vec3 lightDir = vec3(1.,1. , 0.277);
 
 
 void main(void){
-    fragColor=vec4(normal,1);
+    vec4 texcolor=texture(sampler01,uv);
+    fragColor=vec4(texcolor);
 }`;
 
 let editor;

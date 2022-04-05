@@ -18,6 +18,7 @@ export class GameObject {
         this.scene = scene;
         if (geometorydata !== undefined)
             this.buffer = Myrenderer.initBuffers(this.gl, this.geometorydata, shaderinfo);
+        this.textures = Myrenderer.loadtexture(gl, "/assets/apple1.png");
     }
 
     getComponent() {
@@ -46,7 +47,7 @@ export class GameObject {
      */
     draw() {
         Myrenderer.drawElements(this.gl, this.shaderinfo,
-            this.buffer, this.elapsedTime, this.geometorydata, this.transform, this.scene);
+            this.buffer, this.elapsedTime, this.geometorydata, this.transform, this.scene, this.textures);
     }
 
     /**
@@ -74,6 +75,7 @@ export class GameObject {
                 modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
                 Resolution: this.gl.getUniformLocation(shaderProgram, "resolution"),
                 time: this.gl.getUniformLocation(shaderProgram, "time"),
+                texturesampler: this.gl.getUniformLocation(shaderProgram, "sampler01"),
             },
         };
 

@@ -137,6 +137,25 @@ export class Myrenderer {
         };
     }
 
+    static loadtexture(gl, texturePath) {
+        //texture読み込み
+        //空のテクスチャオブジェクトを生成
+        let texture = gl.createTexture();
+        //画像読み取り用のオブジェクトを生成
+        let image = new Image();
+        image.onload = function () {
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            //画像データをバッファに紐付ける
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            // ミップマップを生成
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        };
+        //画像読み込み（srcに値を入れると読み込みが始まる）
+        image.src = texturePath;
+        return texture;
+    }
+
     static initDraw(gl) {
         let red = this.backgroundColor[0];
         let green = this.backgroundColor[1];
@@ -162,7 +181,7 @@ export class Myrenderer {
      * @param geometoryData
      * @param gameObjectTramsform
      */
-    static drawElements(gl, programInfo, buffers, elapsedtime, geometoryData, gameObjectTramsform, scene) {
+    static drawElements(gl, programInfo, buffers, elapsedtime, geometoryData, gameObjectTramsform, scene, textures) {
         const fieldOfView = 45 * Math.PI / 180;   // in radians
         const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
         const zNear = 0.1;

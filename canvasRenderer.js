@@ -169,6 +169,7 @@ function createGameObject(canvas, inputShader, geometoryData, gameobjectTrannsfr
             modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
             Resolution: gl.getUniformLocation(shaderProgram, "resolution"),
             time: gl.getUniformLocation(shaderProgram, "time"),
+            texturesampler: gl.getUniformLocation(shaderProgram, "sampler01"),
         },
     };
 
