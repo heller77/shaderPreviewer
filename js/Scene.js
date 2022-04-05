@@ -12,8 +12,12 @@ export class Scene {
         return this.cameraGameobject;
     }
 
-    addGameObject(gameobject) {
-        this.gameobjectList.push(gameobject);
+    addGameObject(gameobject, name = "") {
+        this.gameobjectList[name] = gameobject;
+    }
+
+    getGameObject(name) {
+        return this.gameobjectList[name];
     }
 
     removeAllGameObject() {

@@ -34,7 +34,7 @@ export function init(canvasClassName) {
             undefined, firstScene);
         const firstdrassettingComponent = new FirstDrawSettingComponent(firstDrawSettingGamebject);
         firstDrawSettingGamebject.addComponent(firstdrassettingComponent);
-        firstScene.addGameObject(firstDrawSettingGamebject);
+        firstScene.addGameObject(firstDrawSettingGamebject, "settinger");
 
         //カメラオブジェクト
         let cameraGameobject = new GameObject(canvas.getContext("webgl2"),
@@ -42,7 +42,7 @@ export function init(canvasClassName) {
             new Transfrom([0, 0, -10], [0, 0, 0]), firstScene);
         let cameraComponent = new CameraComponent(cameraGameobject);
         cameraGameobject.addComponent(cameraComponent);
-        firstScene.addGameObject(cameraGameobject);
+        firstScene.addGameObject(cameraGameobject, "camera");
         firstScene.setCamera(cameraGameobject);
     }
 }
@@ -89,7 +89,7 @@ export function AllCanvasRendering(canvasClassName, shader, geometoryData) {
         let rotateComponent = new ObjectMoveComponent(tempGameObject);
         // tempGameObject.addComponent(rotateComponent);
 
-        firstScene.addGameObject(tempGameObject);
+        firstScene.addGameObject(tempGameObject, "targetObject");
         i += 1;
     }
     preFrameTime = Date.now();
@@ -112,10 +112,12 @@ function loop() {
     const deltatime = 0.001 * (Date.now() - preFrameTime);
     // console.log("gameobject size : " + firstScene.getGameobjectCount());
 
-    firstScene.getGameobjectList().forEach((item) => {
-        item.update(deltatime);
-
-    });
+    // firstScene.getGameobjectList().forEach((item) => {
+    //     item.update(deltatime);
+    // });
+    for (let key in firstScene.getGameobjectList()) {
+        firstScene.getGameobjectList()[key].update(deltatime);
+    }
     preFrameTime = Date.now();
 
     requestAnimationFrame(loop);
