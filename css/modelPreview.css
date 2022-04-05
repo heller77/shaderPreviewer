@@ -38,7 +38,7 @@ p {
     top: 10px;
 }
 
-.modelfileUpload {
+#modelfileUpload {
     display: none;
 }
 
