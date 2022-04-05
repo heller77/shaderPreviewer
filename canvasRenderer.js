@@ -98,9 +98,9 @@ export function AllCanvasRendering(canvasClassName, shader, geometoryData) {
 
 export function setCameraXYZ() {
     let pos = firstScene.getCamera().getComponent().getTransform().position;
-    document.getElementById("cameraX").value = pos[0];
-    document.getElementById("cameraY").value = pos[1];
-    document.getElementById("cameraZ").value = pos[2];
+    // document.getElementById("cameraX").value = pos[0];
+    // document.getElementById("cameraY").value = pos[1];
+    // document.getElementById("cameraZ").value = pos[2];
 
 }
 
