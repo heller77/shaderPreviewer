@@ -6,7 +6,8 @@ export class CameraComponent extends Component {
         super(gameobject);
         this.up = [0, 1, 0];
         this.lookat = [0, 0, 0];
-        this.radius = 2;
+        this.radius = 10;
+        this.angle = 0.0;
     }
 
     getUp() {
@@ -43,8 +44,10 @@ export class CameraComponent extends Component {
         let angleAxis = quat.create();
         let axis = [0, 1, 0];
         axis = Input.getaxis();
-        quat.setAxisAngle(angleAxis, axis, 360.0 / 400 * deltatime);
-        let positionVec = vec3.fromValues(x, y, z);
+        let angle = this.angle + 0.4 * deltatime * Math.PI;
+        this.angle = angle;
+        quat.setAxisAngle(angleAxis, axis, angle);
+        let positionVec = vec3.fromValues(0, 0, this.radius * -1);
         //回転の中心
         let center = vec3.fromValues(0, 0, 0);
 
@@ -56,7 +59,5 @@ export class CameraComponent extends Component {
 
 
         this.gameobject.transform.position = [positionVec[0], positionVec[1], positionVec[2]];
-
- 
     }
 }

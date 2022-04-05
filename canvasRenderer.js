@@ -87,7 +87,7 @@ export function AllCanvasRendering(canvasClassName, shader, geometoryData) {
         tempGameObject.addComponent(meshrenderComponent);
 
         let rotateComponent = new ObjectMoveComponent(tempGameObject);
-        tempGameObject.addComponent(rotateComponent);
+        // tempGameObject.addComponent(rotateComponent);
 
         firstScene.addGameObject(tempGameObject);
         i += 1;
@@ -96,10 +96,19 @@ export function AllCanvasRendering(canvasClassName, shader, geometoryData) {
     loop();
 }
 
+export function setCameraXYZ() {
+    let pos = firstScene.getCamera().getComponent().getTransform().position;
+    document.getElementById("cameraX").value = pos[0];
+    document.getElementById("cameraY").value = pos[1];
+    document.getElementById("cameraZ").value = pos[2];
+
+}
+
 /**
  * 毎フレーム描画する
  */
 function loop() {
+    setCameraXYZ();
     const deltatime = 0.001 * (Date.now() - preFrameTime);
     // console.log("gameobject size : " + firstScene.getGameobjectCount());
 

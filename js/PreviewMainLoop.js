@@ -1,5 +1,12 @@
 import {repositoryPath} from "../filepath.js";
-import {AllCanvasRendering, firstScene, getGeometory, getGeometoryByArray, init} from "../canvasRenderer.js";
+import {
+    AllCanvasRendering,
+    firstScene,
+    getGeometory,
+    getGeometoryByArray,
+    init,
+    setCameraXYZ
+} from "../canvasRenderer.js";
 import {Myrenderer} from "./Myrenderer.js";
 
 window.addEventListener("load", previewMainLoop);
@@ -9,6 +16,7 @@ document.getElementById("modelfileUpload").addEventListener("change", modelChang
 document.getElementById("modelpresetselect").addEventListener("change", modelpresetselect);
 document.getElementById("generateUrl").addEventListener("click", generateUrl);
 document.getElementById("backgroundColor").addEventListener("change", selectBackGroundColor);
+document.getElementById("cameraDistance").addEventListener("input", changeCameraDistance);
 let fsSource = `#version 300 es
 precision mediump float;
 uniform float time;
@@ -44,6 +52,14 @@ function getRGB(colorpickerValue) {
 async function presetModelSelect(filename) {
     const geometry = await getGeometory(repositoryPath + "model/" + filename);
     return geometry;
+}
+
+function changeCameraDistance() {
+    setCameraXYZ();
+    var distance = document.getElementById("cameraDistance").value;
+    firstScene.getCamera().getComponent().radius = distance;
+    console.log(firstScene.getCamera().getComponent().getTransform().position);
+
 }
 
 async function getglslFromUrl(url) {
