@@ -290,6 +290,12 @@ export class Myrenderer {
 
         gl.uniform2f(programInfo.uniformLocations.Resolution, gl.canvas.clientWidth, gl.canvas.clientHeight);
 
+        //テクスチャをシェーダに渡す
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, textures);
+        gl.uniform1i(programInfo.uniformLocations.texturesampler, 0);
+
+
         gl.bindVertexArray(buffers.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.index);
         {
