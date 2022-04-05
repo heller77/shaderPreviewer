@@ -19,7 +19,7 @@ export class GameObject {
         this.scene = scene;
         if (geometorydata !== undefined)
             this.buffer = Myrenderer.initBuffers(this.gl, this.geometorydata, shaderinfo);
-        this.textures = Myrenderer.loadtexture(gl, repositoryPath + "/assets/apple1.png");
+        this.textures = Myrenderer.loadtexture(gl, repositoryPath + "assets/apple1.png");
     }
 
     getComponent() {
