@@ -178,9 +178,10 @@ function updateShader() {
     // let newfsSource = document.getElementById("shaderInput").value;
     let newfsSource = editor.getValue();
     fsSource = editor.getValue();
-    firstScene.getGameobjectList().forEach((item) => {
-        item.updateFsshader(newfsSource);
-    });
+
+    for (let key in firstScene.getGameobjectList()) {
+        firstScene.getGameobjectList()[key].updateFsshader(newfsSource);
+    }
 }
 
 function obserbeChangebox(event) {
