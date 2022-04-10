@@ -148,6 +148,11 @@ export class Myrenderer {
             gl.bindTexture(gl.TEXTURE_2D, texture);
             //画像データをバッファに紐付ける
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            // gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA, image.width, image.height);
+            // gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, image.width, image.height, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            //フィルター
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             // ミップマップを生成
             gl.generateMipmap(gl.TEXTURE_2D);
             gl.bindTexture(gl.TEXTURE_2D, null);
