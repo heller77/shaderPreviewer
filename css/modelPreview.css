@@ -63,6 +63,7 @@ p {
     width: 50%;
 }
 
+/*設定する右側全領域*/
 #modelinfo {
     width: 50%;
     background-color: #5e5e5e;
@@ -73,20 +74,15 @@ p {
     overflow-y: scroll;
     /*margin-top: 1%;*/
     /*margin-left: 1%;*/
-    /*padding: 1% 5% 0 1%;*/
+    padding: 1%;
 }
 
-.box {
-    width: 200px; /* 横幅を200pxに指定 */
-    height: 200px; /* 横幅を200pxに指定 */
-    border: 1px solid #000; /* わかりやすくボーダーを引く */
-    overflow-y: scroll; /* 縦方向にスクロール可能にする */
-}
 
 .component {
-    border: solid 1px white;
+    border: solid 3px #ffffff;
     display: flex;
     flex-flow: column;
+    padding: 10px;
     /*gap: 11% 31%;*/
 }
 
@@ -139,7 +135,7 @@ nav ul li {
     margin-right: 1em;
 }
 
-#urlgenerator {
-    padding: 10px;
-}
+/*#urlgenerator {*/
+/*    padding: 10px;*/
+/*}*/
 
