@@ -87,7 +87,8 @@ p {
 }
 
 .componentTitle {
-    padding-bottom: 1%;
+    padding-bottom: 3%;
+    font-weight: bolder;
 }
 
 .transformInput {
